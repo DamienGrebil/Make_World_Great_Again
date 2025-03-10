@@ -7,11 +7,11 @@ import * as fct from "/src/js/fonctions.js";
 var player; // désigne le sprite du joueur
 var clavier; // pour la gestion du clavier
 var groupe_plateformes;
-var bombee; 
-var gameOver = false; 
-var boutonFeu;  
-var cursors;  
-var groupeBullets;  
+var bombe;
+var gameOver = false;
+var boutonFeu;
+var cursors;
+var groupeBullets;
 var groupeCibles;
 
 // définition de la classe "selection"
@@ -31,7 +31,7 @@ export default class selection extends Phaser.Scene {
   preload() {
     // tous les assets du jeu sont placés dans le sous-répertoire src/assets/
     this.load.image("img_ciel", "src/assets/sky.png");
-    this.load.image("img_drapeau","src/assets/drapeau.png")
+    this.load.image("img_drapeau", "src/assets/drapeau.png")
     this.load.image("img_plateforme", "src/assets/platform.png");
     this.load.image("img_bombe", "src/assets/bombe.png")
     this.load.spritesheet("img_perso", "src/assets/trump.png", {
@@ -45,9 +45,9 @@ export default class selection extends Phaser.Scene {
     this.load.image("img_porte3", "src/assets/door3.png");
     this.load.image("img_bombe", "src/assets/bombe.png");
     cursors = this.input.keyboard.createCursorKeys();
-    boutonFeu = this.input.keyboard.addKey('A'); 
-    this.load.image("bullet", "src/assets/balle.png");  
-    this.load.image("cible", "src/assets/bouton.png"); 
+    boutonFeu = this.input.keyboard.addKey('A');
+    this.load.image("bullet", "src/assets/balle.png");
+    this.load.image("cible", "src/assets/bouton.png");
   }
 
   /***********************************************************************/
@@ -56,8 +56,8 @@ export default class selection extends Phaser.Scene {
 
 
   create() {
-      fct.doNothing();
-      fct.doAlsoNothing();
+    fct.doNothing();
+    fct.doAlsoNothing();
 
     /*************************************
      *  CREATION DU MONDE + PLATEFORMES  *
@@ -80,12 +80,12 @@ export default class selection extends Phaser.Scene {
     groupe_plateformes.create(200, 590, "img_plateforme");
     groupe_plateformes.create(600, 590, "img_plateforme");
 
-    
 
-    
-    
 
-    
+
+
+
+
 
     /****************************
      *  CREATION DU PERSONNAGE  *
@@ -97,7 +97,7 @@ export default class selection extends Phaser.Scene {
     //  propriétées physiqyes de l'objet player :
     player.setBounce(0.2); // on donne un petit coefficient de rebond
     player.setCollideWorldBounds(true); // le player se cognera contre les bords du monde
-    player.direction = 'right'; 
+    player.direction = 'right';
     /***************************
      *  CREATION DES ANIMATIONS *
      ****************************/
@@ -140,13 +140,13 @@ export default class selection extends Phaser.Scene {
     //  Collide the player and the groupe_etoiles with the groupe_plateformes
     this.physics.add.collider(player, groupe_plateformes);
 
-    bombe = this.physics.add.group(); 
-    this.physics.add.collider(bombe, groupe_plateformes); 
+    bombe = this.physics.add.group();
+    this.physics.add.collider(bombe, groupe_plateformes);
     var x;
     if (player.x < 400) {
-     x = Phaser.Math.Between(400, 800);
+      x = Phaser.Math.Between(400, 800);
     } else {
-    x = Phaser.Math.Between(0, 400);
+      x = Phaser.Math.Between(0, 400);
     }
 
     var une_bombe = bombe.create(x, 16, "img_bombe");
@@ -154,29 +154,33 @@ export default class selection extends Phaser.Scene {
     une_bombe.setCollideWorldBounds(true);
     une_bombe.setVelocity(Phaser.Math.Between(-200, 200), 20);
     une_bombe.allowGravity = false;
-    this.physics.add.collider(player, bombe, chocAvecBombe, null, this); 
+    this.physics.add.collider(player, bombe, chocAvecBombe, null, this);
 
-    groupeBullets = this.physics.add.group(); 
-  this.physics.add.overlap(groupeBullets, groupeCibles, hit, null,this);
+    groupeBullets = this.physics.add.group();
 
-  // modification des cibles créées
-groupeCibles.children.iterate(function (cibleTrouvee) {
-  // définition de points de vie
-  cibleTrouvee.pointsVie=Phaser.Math.Between(1, 5);;
-  // modification de la position en y
-  cibleTrouvee.y = Phaser.Math.Between(10,250);
-  // modification du coefficient de rebond
-  cibleTrouvee.setBounce(1);
-  });  
-  this.physics.world.on("worldbounds", function(body) {
-  // on récupère l'objet surveillé
-  var objet = body.gameObject;
-  // s'il s'agit d'une balle
-  if (groupeBullets.contains(objet)) {
-      // on le détruit
-      objet.destroy();
-  }
-  });
+    groupeCibles = this.physics.add.group();
+    
+
+    this.physics.add.overlap(groupeBullets, groupeCibles, hit, null, this);
+
+    // modification des cibles créées
+    groupeCibles.children.iterate(function (cibleTrouvee) {
+      // définition de points de vie
+      cibleTrouvee.pointsVie = Phaser.Math.Between(1, 5);;
+      // modification de la position en y
+      cibleTrouvee.y = Phaser.Math.Between(10, 250);
+      // modification du coefficient de rebond
+      cibleTrouvee.setBounce(1);
+    });
+    this.physics.world.on("worldbounds", function (body) {
+      // on récupère l'objet surveillé
+      var objet = body.gameObject;
+      // s'il s'agit d'une balle
+      if (groupeBullets.contains(objet)) {
+        // on le détruit
+        objet.destroy();
+      }
+    });
   }
 
   /***********************************************************************/
@@ -197,7 +201,7 @@ groupeCibles.children.iterate(function (cibleTrouvee) {
       player.setVelocityX(0);
       player.anims.play("anim_face");
     }
-    
+
     if (clavier.up.isDown && player.body.touching.down) {
       player.setVelocityY(-330);
     }
@@ -210,17 +214,17 @@ groupeCibles.children.iterate(function (cibleTrouvee) {
       if (this.physics.overlap(player, this.porte3))
         this.scene.switch("niveau3");
     }
-    
-  // déclenchement de la fonction tirer() si appui sur boutonFeu 
-  if ( Phaser.Input.Keyboard.JustDown(boutonFeu)) {
-    tirer(player);
-  }  
-  }
-  
 
-  if (gameOver) {
+    // déclenchement de la fonction tirer() si appui sur boutonFeu 
+    if (Phaser.Input.Keyboard.JustDown(boutonFeu)) {
+      tirer(player);
+    }
+  }
+
+
+  if(gameOver) {
     return;
-  } 
+  }
 }
 
 
@@ -230,27 +234,27 @@ function chocAvecBombe(un_player, une_bombe) {
   player.setTint(0xff00ff);
   player.anims.play("anim_face");
   gameOver = true;
-} 
+}
 
 function tirer(player) {
   var coefDir;
-if (player.direction == 'left') { coefDir = -1; } else { coefDir = 1 }
+  if (player.direction == 'left') { coefDir = -1; } else { coefDir = 1 }
   // on crée la balle a coté du joueur
   var bullet = groupeBullets.create(player.x + (25 * coefDir), player.y - 4, 'bullet');
   // parametres physiques de la balle.
   bullet.setCollideWorldBounds(true);
-  bullet.body.allowGravity =false;
+  bullet.body.allowGravity = false;
   bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
-}  
+}
 
 
-function hit (bullet, groupeCibles) {
+function hit(bullet, groupeCibles) {
   groupeCibles.pointsVie--;
-  if (groupeCibles.pointsVie==0) {
-    groupeCibles.destroy(); 
-  } 
-   bullet.destroy();
-}  
+  if (groupeCibles.pointsVie == 0) {
+    groupeCibles.destroy();
+  }
+  bullet.destroy();
+}
 /***********************************************************************/
 /** CONFIGURATION GLOBALE DU JEU ET LANCEMENT 
 /***********************************************************************/
