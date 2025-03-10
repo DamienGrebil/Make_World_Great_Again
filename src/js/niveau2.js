@@ -19,6 +19,7 @@ export default class niveau2 extends Phaser.Scene {
     });
 
     this.porte_retour = this.physics.add.staticSprite(100, 550, "img_porte2");
+    this.porte3 = this.physics.add.staticSprite(750, 550, "img_porte3");
 
     this.player = this.physics.add.sprite(100, 450, "img_perso");
     this.player.refreshBody();
@@ -42,11 +43,19 @@ export default class niveau2 extends Phaser.Scene {
     if (this.clavier.up.isDown && this.player.body.touching.down) {
       this.player.setVelocityY(-330);
     }
+    if (this.clavier.down.isDown) {
+      this.player.setVelocityY(260);
+      this.player.anims.play("anim_face");
+    }
 
     if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
       if (this.physics.overlap(this.player, this.porte_retour)) {
         console.log("niveau 3 : retour vers selection");
-        this.scene.switch("selection");
+        this.scene.switch("niveau1");
+      }
+      if (this.physics.overlap(this.player, this.porte3)) {
+        console.log("niveau 3 : passage au niveau 3");
+        this.scene.switch("niveau3");
       }
     }
   }

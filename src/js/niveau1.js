@@ -11,9 +11,6 @@ export default class niveau1 extends Phaser.Scene {
   }
 
   create() {
-    fct.doNothing();
-    fct.doAlsoNothing();
-
     this.add.image(400, 300, "img_ciel");
     this.groupe_plateformes = this.physics.add.staticGroup();
     this.groupe_plateformes.create(200, 584, "img_plateforme");
@@ -25,6 +22,7 @@ export default class niveau1 extends Phaser.Scene {
     });
 
     this.porte_retour = this.physics.add.staticSprite(100, 550, "img_porte1");
+    this.porte2 = this.physics.add.staticSprite(750, 550, "img_porte2");
 
     this.player = this.physics.add.sprite(100, 450, "img_perso");
     this.player.refreshBody();
@@ -48,10 +46,18 @@ export default class niveau1 extends Phaser.Scene {
     if (this.clavier.up.isDown && this.player.body.touching.down) {
       this.player.setVelocityY(-330);
     }
+    
+    if (this.clavier.down.isDown) {
+      this.player.setVelocityY(260);
+      this.player.anims.play("anim_face");
+    }
 
     if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
       if (this.physics.overlap(this.player, this.porte_retour)) {
         this.scene.switch("selection");
+      }
+      if (this.physics.overlap(this.player, this.porte2)) {
+        this.scene.switch("niveau2");
       }
     }
   }

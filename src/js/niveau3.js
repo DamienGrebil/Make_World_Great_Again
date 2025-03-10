@@ -43,11 +43,15 @@ export default class niveau3 extends Phaser.Scene {
     if (this.clavier.up.isDown && this.player.body.touching.down) {
       this.player.setVelocityY(-330);
     }
+    if (this.clavier.down.isDown) {
+      this.player.setVelocityY(260);
+      this.player.anims.play("anim_face");
+    }
 
     if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
       if (this.physics.overlap(this.player, this.porte_retour)) {
         console.log("niveau 3 : retour vers selection");
-        this.scene.switch("selection");
+        this.scene.switch("niveau2");
       }
     }
   }

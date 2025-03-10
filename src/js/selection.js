@@ -56,9 +56,6 @@ export default class selection extends Phaser.Scene {
 
 
   create() {
-    fct.doNothing();
-    fct.doAlsoNothing();
-
     /*************************************
      *  CREATION DU MONDE + PLATEFORMES  *
      *************************************/
@@ -77,14 +74,18 @@ export default class selection extends Phaser.Scene {
     // l'image img_plateforme fait 400x32. On en met 2 à coté pour faire le sol
     // la méthode create permet de créer et d'ajouter automatiquement des objets à un groupe
     // on précise 2 parametres : chaque coordonnées et la texture de l'objet, et "voila!"
-    groupe_plateformes.create(200, 590, "img_plateforme");
-    groupe_plateformes.create(600, 590, "img_plateforme");
+    groupe_plateformes.create(200, 584, "img_plateforme");
+    groupe_plateformes.create(600, 584, "img_plateforme");
 
+    //  on ajoute 3 platesformes flottantes
+    groupe_plateformes.create(600, 450, "img_plateforme");
+    groupe_plateformes.create(50, 300, "img_plateforme");
+    groupe_plateformes.create(750, 270, "img_plateforme");
 
-
-
-
-
+    /****************************
+     *  Ajout des portes   *
+     ****************************/
+    this.porte1 = this.physics.add.staticSprite(600, 414, "img_porte1");
 
 
     /****************************
@@ -200,6 +201,9 @@ export default class selection extends Phaser.Scene {
     } else {
       player.setVelocityX(0);
       player.anims.play("anim_face");
+    } if (clavier.down.isDown) {
+      player.setVelocityY(260);
+      player.anims.play("anim_face");
     }
 
     if (clavier.up.isDown && player.body.touching.down) {
@@ -226,7 +230,6 @@ export default class selection extends Phaser.Scene {
     return;
   }
 }
-
 
 function chocAvecBombe(un_player, une_bombe) {
   console.log("hit");
