@@ -7,6 +7,8 @@ import * as fct from "/src/js/fonctions.js";
 var player; // désigne le sprite du joueur
 var clavier; // pour la gestion du clavier
 var groupe_plateformes;
+var bomb; 
+var gameOver = false; 
 
 // définition de la classe "selection"
 export default class selection extends Phaser.Scene {
@@ -140,6 +142,23 @@ export default class selection extends Phaser.Scene {
 
     //  Collide the player and the groupe_etoiles with the groupe_plateformes
     this.physics.add.collider(player, groupe_plateformes);
+
+    bomb = this.physics.add.group(); 
+this.physics.add.collider(bomb, groupe_plateformes); 
+var x;
+if (player.x < 400) {
+  x = Phaser.Math.Between(400, 800);
+} else {
+  x = Phaser.Math.Between(0, 400);
+}
+
+var une_bombe = bomb.create(x, 16, "img_bombe");
+une_bombe.setBounce(1);
+une_bombe.setCollideWorldBounds(true);
+une_bombe.setVelocity(Phaser.Math.Between(-200, 200), 20);
+une_bombe.allowGravity = false;
+this.physics.add.collider(player, bomb, chocAvecBombe, null, this); 
+
   }
 
   /***********************************************************************/
@@ -172,8 +191,19 @@ export default class selection extends Phaser.Scene {
         this.scene.switch("niveau3");
     }
   }
+
+  if (gameOver) {
+    return;
+  } 
 }
 
+
+function chocAvecBombe(un_player, une_bombe) {
+  this.physics.pause();
+  player.setTint(0xff0000);
+  player.anims.play("anim_face");
+  gameOver = true;
+} 
 /***********************************************************************/
 /** CONFIGURATION GLOBALE DU JEU ET LANCEMENT 
 /***********************************************************************/
