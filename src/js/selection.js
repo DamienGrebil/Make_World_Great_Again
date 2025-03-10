@@ -40,6 +40,7 @@ export default class selection extends Phaser.Scene {
     });
     this.load.image("img_trump_menu", "src/assets/trump menu.png")
     this.load.image("img_fond_menu", "src/assets/fond_menu.png")
+    this.load.image("img_play", "src/assets/porte.transparente.png")
     this.load.image("img_porte1", "src/assets/door1.png");
     this.load.image("img_porte2", "src/assets/door2.png");
     this.load.image("img_porte3", "src/assets/door3.png");
@@ -92,6 +93,11 @@ export default class selection extends Phaser.Scene {
     player.setBounce(0.2); // on donne un petit coefficient de rebond
     player.setCollideWorldBounds(true); // le player se cognera contre les bords du monde
     player.direction = 'right';
+
+
+    this.play = this.physics.add.staticSprite(420, 490, "img_play");
+
+
     /***************************
      *  CREATION DES ANIMATIONS *
      ****************************/
@@ -203,7 +209,11 @@ export default class selection extends Phaser.Scene {
       player.setVelocityY(-330);
     }
 
-    
+    if (Phaser.Input.Keyboard.JustDown(clavier.space) == true) {
+      if (this.physics.overlap(player, this.play))
+        this.scene.switch("niveau1");
+
+
 
     // déclenchement de la fonction tirer() si appui sur boutonFeu 
     if (Phaser.Input.Keyboard.JustDown(boutonFeu)) {
@@ -215,6 +225,7 @@ export default class selection extends Phaser.Scene {
   if(gameOver) {
     return;
   }
+}
 }
 
 function chocAvecBombe(un_player, une_bombe) {
@@ -235,6 +246,7 @@ function tirer(player) {
   bullet.body.allowGravity = false;
   bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
 }
+
 
 
 function hit(bullet, groupeCibles) {
