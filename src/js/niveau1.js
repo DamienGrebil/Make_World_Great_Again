@@ -68,7 +68,7 @@ export default class niveau1 extends Phaser.Scene {
     this.add.image(100, 245, "img_agent_d"); 
     this.add.image(600, 245, "img_agent_g"); 
     this.add.image(50, 335, "img_agent_d"); 
-    this.add.image(700, 435, "img_agent_g"); 
+    this.add.image(700, 425, "img_agent_g"); 
 
   }
 
