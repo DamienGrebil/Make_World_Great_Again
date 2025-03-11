@@ -1,5 +1,5 @@
 import * as fct from "/src/js/fonctions.js";
-
+import selection from "/src/js/selection.js";
 export default class niveau1 extends Phaser.Scene {
   // constructeur de la classe
   constructor() {
@@ -55,11 +55,12 @@ export default class niveau1 extends Phaser.Scene {
     this.player.setCollideWorldBounds(true);
     this.physics.add.collider(this.player, calque_background_2);
     this.cameras.main.startFollow(this.player);
-    this.clavier = this.input.keyboard.createCursorKeys();
-    this.startCountdown(); 
+    this.clavier = this.input.keyboard.createCursorKeys(); 
     this.physics.add.collider(this.player, this.groupe_plateformes);
-    this.startCountdown(); //démare le compte à rebours
+    fct.startCountdown(this);
+
   }
+
 
   
 
@@ -89,38 +90,7 @@ export default class niveau1 extends Phaser.Scene {
       }
       if (this.physics.overlap(this.player, this.porte2)) {
         this.scene.switch("niveau2");
+        }
       }
     }
   }
-  startCountdown() {
-    this.timeLeft = 10 * 60; // 10 minutes en secondes
-    this.timerText = this.add.text(400, 20, "Temps restant: 10:00", {
-      fontSize: "20px", // taille de la police
-      fill: "#fff" // couleur de la police
-    });
-
-    this.time.addEvent({
-      delay: 1000, // delai de 1 seconde
-      callback: () => {
-        this.timeLeft--;
-        let minutes = Math.floor(this.timeLeft / 60); // division entière par 60
-        let seconds = this.timeLeft % 60; // reste de la division par 60
-        this.timerText.setText(`Temps restant: ${minutes}:${seconds.toString().padStart(2, '0')}`); // affichage du temps restant
-
-        if (this.timeLeft <= 0) { // si le temps est écoulé
-          this.killPlayer(); // on tue le joueur
-        }
-      },
-      loop: true // boucle infinie
-    });
-  }
-
-  killPlayer() {
-    this.player.setTint(0xff0000); // on change la couleur du joueur
-    this.player.setVelocity(0, 0); // on arrête le joueur
-    this.player.anims.stop(); // on arrête l'animation du joueur
-    this.time.delayedCall(5000, () => { // on attend 5 secondes
-      this.scene.restart(); // on redémarre la scène
-    });
-  }
-}
