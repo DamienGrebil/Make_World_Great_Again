@@ -1,5 +1,5 @@
 import * as fct from "/src/js/fonctions.js";
-
+import selection from "/src/js/selection.js";
 export default class niveau1 extends Phaser.Scene {
   // constructeur de la classe
   constructor() {
@@ -63,6 +63,8 @@ export default class niveau1 extends Phaser.Scene {
     this.player.setCollideWorldBounds(true);
     this.clavier = this.input.keyboard.createCursorKeys();
     this.physics.add.collider(this.player, this.groupe_plateformes);
+    fct.startCountdown(this);
+
   }
 
   update() {

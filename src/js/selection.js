@@ -53,7 +53,7 @@ export default class selection extends Phaser.Scene {
     cursors = this.input.keyboard.createCursorKeys();
     boutonFeu = this.input.keyboard.addKey('A');
     this.load.image("bullet", "src/assets/balle.png");
-    this.load.image("cible", "src/assets/bouton.png");
+    this.load.image("cible", "src/assets/bouton.png", { frameWidth: 100, frameHeight: 32 });
   }
 
   /***********************************************************************/
@@ -83,8 +83,14 @@ export default class selection extends Phaser.Scene {
     groupe_plateformes.create(200, 584, "img_plateforme");
     groupe_plateformes.create(600, 584, "img_plateforme");
 
-   
-    
+    groupeCibles = this.physics.add.group({
+      key: 'cible',
+      repeat: 5,
+      setXY: { x: 24, y: 0, stepX: 107 }
+
+    });
+    this.physics.add.collider(groupeCibles, groupe_plateformes);
+
 
 
     /****************************
@@ -164,12 +170,7 @@ export default class selection extends Phaser.Scene {
     this.physics.add.collider(player, bombe, chocAvecBombe, null, this);
 
     groupeBullets = this.physics.add.group();
-
-    groupeCibles = this.physics.add.group();
-    
-
     this.physics.add.overlap(groupeBullets, groupeCibles, hit, null, this);
-
     // modification des cibles créées
     groupeCibles.children.iterate(function (cibleTrouvee) {
       // définition de points de vie
@@ -195,6 +196,11 @@ export default class selection extends Phaser.Scene {
 /***********************************************************************/
 
   update() {
+    // déclenchement de la fonction tirer() si appui sur boutonFeu 
+    if (Phaser.Input.Keyboard.JustDown(boutonFeu)) {
+      console.log("Tir déclenché !");
+      tirer(player);
+    }
 
     if (clavier.left.isDown) {
       player.direction = 'left';
@@ -207,7 +213,9 @@ export default class selection extends Phaser.Scene {
     } else {
       player.setVelocityX(0);
       player.anims.play("anim_face");
-    } if (clavier.down.isDown) {
+    } 
+    
+    if (clavier.down.isDown) {
       player.setVelocityY(260);
       player.anims.play("anim_face");
     }
@@ -216,14 +224,14 @@ export default class selection extends Phaser.Scene {
       player.setVelocityY(-330);
     }
 
-    if (Phaser.Input.Keyboard.JustDown(clavier.space) == true) {
+    
       if (this.physics.overlap(player, this.play))
         this.scene.switch("niveau1");
       if (this.physics.overlap(player, this.regles)) {
         console.log("Changement de scène vers règles"); // Debug
         this.scene.start("règles"); // Assurez-vous que la scène "règles" existe
       }
-    }
+    
 
     
     
@@ -254,7 +262,9 @@ function chocAvecBombe(un_player, une_bombe) {
   gameOver = true;
 }
 
+
 function tirer(player) {
+  print("tirer");
   var coefDir;
   if (player.direction == 'left') { coefDir = -1; } else { coefDir = 1 }
   // on crée la balle a coté du joueur
@@ -264,8 +274,6 @@ function tirer(player) {
   bullet.body.allowGravity = false;
   bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
 }
-
-
 
 function hit(bullet, groupeCibles) {
   groupeCibles.pointsVie--;
