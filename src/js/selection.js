@@ -150,7 +150,7 @@ export default class selection extends Phaser.Scene {
     }
 
     var une_bombe = bombe.create(x, 16, "img_bombe");
-    une_bombe.setBounce(1);
+    une_bombe.setBounce(0.8);
     une_bombe.setCollideWorldBounds(true);
     une_bombe.setVelocity(Phaser.Math.Between(-200, 200), 20);
     une_bombe.allowGravity = false;

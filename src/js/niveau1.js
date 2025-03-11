@@ -16,6 +16,7 @@ export default class niveau1 extends Phaser.Scene {
     this.load.image("img_porte1", "src/assets/porte1.png");
     this.load.image("img_porte2", "src/assets/porte2.png");
     this.load.image("img_perso", "src/assets/perso.png");
+    this.gameOver = false;
   }
 
   create() {
@@ -55,31 +56,10 @@ export default class niveau1 extends Phaser.Scene {
     this.physics.add.collider(this.player, calque_background_2);
     this.cameras.main.startFollow(this.player);
     this.clavier = this.input.keyboard.createCursorKeys();
-    
-
-
+    this.startCountdown(); 
   }
 
-  /*create() {
-    this.add.image(400, 300, "img_ciel");
-    this.groupe_plateformes = this.physics.add.staticGroup();
-    this.groupe_plateformes.create(200, 584, "img_plateforme");
-    this.groupe_plateformes.create(600, 584, "img_plateforme");
-    // ajout d'un texte distintcif  du niveau
-    this.add.text(400, 100, "Vous êtes dans le niveau 1", {
-      fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
-      fontSize: "22pt"
-    });*/
-
   
-
-   /* this.player = this.physics.add.sprite(100, 450, "img_perso");
-    this.player.refreshBody();
-    this.player.setBounce(0.2);
-    this.player.setCollideWorldBounds(true);
-    this.clavier = this.input.keyboard.createCursorKeys();
-    this.physics.add.collider(this.player, this.groupe_plateformes);
-  }*/
 
   update() {
     if (this.clavier.left.isDown) {
@@ -109,5 +89,36 @@ export default class niveau1 extends Phaser.Scene {
         this.scene.switch("niveau2");
       }
     }
+  }
+  startCountdown() {
+    this.timeLeft = 10 * 60; // 10 minutes en secondes
+    this.timerText = this.add.text(400, 20, "Temps restant: 10:00", {
+      fontSize: "20px",
+      fill: "#fff"
+    });
+
+    this.time.addEvent({
+      delay: 1000,
+      callback: () => {
+        this.timeLeft--;
+        let minutes = Math.floor(this.timeLeft / 60);
+        let seconds = this.timeLeft % 60;
+        this.timerText.setText(`Temps restant: ${minutes}:${seconds.toString().padStart(2, '0')}`);
+
+        if (this.timeLeft <= 0) {
+          this.killPlayer();
+        }
+      },
+      loop: true
+    });
+  }
+
+  killPlayer() {
+    this.player.setTint(0xff0000);
+    this.player.setVelocity(0, 0);
+    this.player.anims.stop();
+    this.time.delayedCall(5000, () => {
+      this.scene.restart();
+    });
   }
 }
