@@ -1,5 +1,5 @@
 import * as fct from "/src/js/fonctions.js";
-
+import { killPlayer } from "/src/js/fonctions.js"; // Import killPlayer here
 /***********************************************************************/
 /** VARIABLES GLOBALES 
 /***********************************************************************/
@@ -217,7 +217,7 @@ export default class selection extends Phaser.Scene {
     } 
     
     if (clavier.down.isDown) {
-      player.setVelocityY(260);
+      player.setVelocityY(300);
       player.anims.play("anim_face");
     }
 
@@ -234,55 +234,42 @@ export default class selection extends Phaser.Scene {
       }
     
 
-    
-    
-
-    
-
-
-
     // déclenchement de la fonction tirer() si appui sur boutonFeu 
     if (Phaser.Input.Keyboard.JustDown(boutonFeu)) {
       tirer(player);
     }
   
-      
-
-
     if(gameOver) {
-      return;
+      return; // on sort de la fonction update si gameOver est true
     }
   }
 }
 
-function chocAvecBombe(un_player, une_bombe) {
-  console.log("hit");
-  this.physics.pause();
-  player.setTint(0xff00ff);
-  player.anims.play("anim_face");
-  gameOver = true;
+function chocAvecBombe(un_player, une_bombe) { // fonction appelée lorsqu'une bombe touche le joueur
+  console.log("hit"); //debug 
+  this.physics.pause(); // on met le jeu en pause
+  player.setTint(0xff00ff); // on change la couleur du joueur
+  player.anims.play("anim_face"); // on joue l'animation "anim_face"
+  gameOver = true; // on met la variable gameOver à true
+  killPlayer(this); // on appelle la fonction killPlayer
 }
 
 
-function tirer(player) {
-  print("tirer");
-  var coefDir;
-  if (player.direction == 'left') { coefDir = -1; } else { coefDir = 1 }
-  // on crée la balle a coté du joueur
-  var bullet = groupeBullets.create(player.x + (25 * coefDir), player.y - 4, 'bullet');
+function tirer(player) { // fonction appelée lorsqu'on appuie sur le bouton de tir
+  print("tirer"); // debug
+  var coefDir; // coefficient de direction
+  if (player.direction == 'left') { coefDir = -1; } else { coefDir = 1 } // si le joueur regarde à gauche, coefDir = -1, sinon coefDir = 1
+  var bullet = groupeBullets.create(player.x + (25 * coefDir), player.y - 4, 'bullet');   // on crée la balle a coté du joueur
   // parametres physiques de la balle.
   bullet.setCollideWorldBounds(true);
   bullet.body.allowGravity = false;
   bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
 }
 
-function hit(bullet, groupeCibles) {
-  groupeCibles.pointsVie--;
-  if (groupeCibles.pointsVie == 0) {
-    groupeCibles.destroy();
+function hit(bullet, groupeCibles) { // fonction appelée lorsqu'une balle touche une cible
+  groupeCibles.pointsVie--;  // on retire un point de vie à la cible
+  if (groupeCibles.pointsVie == 0) { // si la cible n'a plus de points de vie
+    groupeCibles.destroy(); // on la détruit
   }
-  bullet.destroy();
+  bullet.destroy(); // on détruit la balle
 }
-/***********************************************************************/
-/** CONFIGURATION GLOBALE DU JEU ET LANCEMENT 
-/***********************************************************************/

@@ -62,12 +62,25 @@ export function updateTimerPosition(scene) {
     scene.timerText.x = scene.cameras.main.scrollX + scene.cameras.main.width - 160; // Décalage à droite
     scene.timerText.y = scene.cameras.main.scrollY + 20; // Décalage en haut
 }
-function killPlayer(scene) {
+export function killPlayer(scene) {
     console.log("Le joueur est mort !");
-    scene.player.setTint(0xff0000);
-    scene.player.setVelocity(0, 0);
-    scene.player.anims.stop();
-    scene.time.delayedCall(5000, () => {
-        scene.scene.restart();
+    if (scene.player) { // Check if player exists
+        scene.player.setTint(0xff0000);
+        scene.player.setVelocity(0, 0);
+        scene.player.anims.stop();
+    }
+    scene.physics.pause(); // Pause physics to prevent further collisions
+    
+    scene.time.delayedCall(3000, () => {
+        // Logic for respawning
+        
+        if (scene.scene.key === "selection"){
+            scene.scene.restart();
+            scene.gameOver = false;
+        }else{
+            scene.scene.start(scene.scene.key);
+        }
+        
+        scene.physics.resume();// Resumes the physics simulation
     });
 }
