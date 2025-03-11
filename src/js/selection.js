@@ -220,14 +220,14 @@ export default class selection extends Phaser.Scene {
       player.setVelocityY(-330);
     }
 
-    if (Phaser.Input.Keyboard.JustDown(clavier.space) == true) {
+    
       if (this.physics.overlap(player, this.play))
         this.scene.switch("niveau1");
       if (this.physics.overlap(player, this.regles)) {
         console.log("Changement de scène vers règles"); // Debug
         this.scene.start("règles"); // Assurez-vous que la scène "règles" existe
       }
-    }
+    
 
     
     
@@ -268,7 +268,7 @@ function tirer(player) {
   // parametres physiques de la balle.
   bullet.setCollideWorldBounds(true);
   bullet.body.allowGravity = false;
-  bullet.setVelocity(100 * coefDir, 0); // vitesse en x et en y
+  bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
 }
 
 function hit(bullet, groupeCibles) {
