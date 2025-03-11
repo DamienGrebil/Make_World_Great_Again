@@ -55,7 +55,8 @@ export default class selection extends Phaser.Scene {
     cursors = this.input.keyboard.createCursorKeys();
     boutonFeu = this.input.keyboard.addKey('A');
     this.load.image("bullet", "src/assets/balle.png");
-    this.load.image("cible", "src/assets/bouton.png", { frameWidth: 100, frameHeight: 32 });
+    this.load.image("cible_d", "src/assets/bouton_d.png");
+    this.load.image("cible_g", "src/assets/bouton_g.png");
   }
 
   /***********************************************************************/
