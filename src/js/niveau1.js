@@ -48,7 +48,7 @@ export default class niveau1 extends Phaser.Scene {
 
 
     // ajout d'un texte distintcif  du niveau
-    this.add.text(420, 50, "Vous êtes dans le niveau 1", {
+    this.add.text(600, 30, "White House", {
       fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
       fontSize: "22pt",
       color: "#000000" // Définit la couleur du texte en noir

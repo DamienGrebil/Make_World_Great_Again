@@ -28,7 +28,7 @@ function hit(bullet, groupeCibles) {
   }
 export function startCountdown(scene) {
     scene.timeLeft = 10 * 60; // 10 minutes en secondes
-    scene.timerText = scene.add.text(500, 100, "Temps restant: 10:00", {
+    scene.timerText = scene.add.text(195, 0, "Temps restant: 10:00", {
         fontSize: "20px",
         fill: "#ffffff",
         fontFamily: "Arial",
