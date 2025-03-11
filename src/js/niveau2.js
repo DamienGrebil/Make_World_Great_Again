@@ -7,10 +7,10 @@ export default class niveau2 extends Phaser.Scene {
     });
   }
   preload() {
-    this.load.image("Phaser_Tuile_de_jeuV0", "src/assets/pixil-frame-0 (1).png");
+    this.load.image("Phaser_tuile_de_jeu_v0", "src/assets/pixil-frame-0 (3).png");
 
     // chargement de la carte
-    this.load.tilemapTiledJSON("carte", "src/assets/map.json");
+    this.load.tilemapTiledJSON("carte", "src/assets/mapNiv2.json");
     this.load.image("img_porte1", "src/assets/porte1.png");
     this.load.image("img_porte2", "src/assets/porte2.png");
     this.load.image("img_perso", "src/assets/perso.png");
@@ -23,34 +23,40 @@ export default class niveau2 extends Phaser.Scene {
 
     // chargement du jeu de tuiles
     const tileset = carteDuNiveau.addTilesetImage(
-          "Tuile_de_jeuV0",
-          "Phaser_Tuile_de_jeuV0"
+          "tuile_de_jeuv0",
+          "Phaser_tuile_de_jeu_v0"
         ); 
     // chargement du calque calque_background
     const calque_background = carteDuNiveau.createLayer(
-          "Calque de Tuiles 1",
+          "background",
           tileset
         );
 
     // chargement du calque calque_background_2
     const calque_background_2 = carteDuNiveau.createLayer(
-        "route",
-        tileset
+          "background2",
+          tileset
       );
-    calque_background_2.setCollisionByProperty({ estSolide: true }); 
+    
+      // chargement du calque calque_plateformes
+  const calque_plateformes = carteDuNiveau.createLayer(
+          "plateformes",
+        tileset
+    );
+    calque_plateformes.setCollisionByProperty({estSolide: true }); 
 
     // redimentionnement du monde avec les dimensions calculées via tiled
     this.physics.world.setBounds(0, 0, 3200, 640);
     //  ajout du champs de la caméra de taille identique à celle du monde
     this.cameras.main.setBounds(0, 0, 3200, 640);
     // ancrage de la caméra sur le joueur
-    this.porte_retour = this.physics.add.staticSprite(100, 500, "img_porte2");
-    this.porte3 = this.physics.add.staticSprite(750, 500, "img_porte3");
+    this.porte_retour = this.physics.add.staticSprite(100, 525, "img_porte2");
+    this.porte3 = this.physics.add.staticSprite(3150, 525, "img_porte3");
     this.player = this.physics.add.sprite(100, 450, "img_perso");
     this.player.refreshBody();
     this.player.setBounce(0.2);
     this.player.setCollideWorldBounds(true);
-    this.physics.add.collider(this.player, calque_background_2);
+    this.physics.add.collider(this.player, calque_plateformes);
     this.cameras.main.startFollow(this.player);
     this.clavier = this.input.keyboard.createCursorKeys();
     }
@@ -67,7 +73,7 @@ export default class niveau2 extends Phaser.Scene {
       this.player.anims.play("anim_face");
     }
     if (this.clavier.up.isDown && this.player.body.blocked.down) {
-      this.player.setVelocityY(-200);
+      this.player.setVelocityY(-325);
     }
     
     if (this.clavier.down.isDown) {
