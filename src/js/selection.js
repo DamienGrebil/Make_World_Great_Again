@@ -43,6 +43,7 @@ export default class selection extends Phaser.Scene {
     });
     this.load.image("img_maison_b", "src/assets/maison_blanche.png")
     this.load.image("img_trump_menu", "src/assets/trump menu.png")
+    this.load.image("img_agent", "src/assets/agent100.png")
     this.load.image("img_fond_menu", "src/assets/fond_menu.png")
     this.load.image("img_play", "src/assets/porte.transparente.png")
     this.load.image("img_porte1", "src/assets/door1.png");
