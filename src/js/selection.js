@@ -256,7 +256,6 @@ function chocAvecBombe(un_player, une_bombe) { // fonction appelée lorsqu'une b
 
 
 function tirer(player) { // fonction appelée lorsqu'on appuie sur le bouton de tir
-  print("tirer"); // debug
   var coefDir; // coefficient de direction
   if (player.direction == 'left') { coefDir = -1; } else { coefDir = 1 } // si le joueur regarde à gauche, coefDir = -1, sinon coefDir = 1
   var bullet = groupeBullets.create(player.x + (25 * coefDir), player.y - 4, 'bullet');   // on crée la balle a coté du joueur
