@@ -54,6 +54,13 @@ export default class niveau1 extends Phaser.Scene {
     this.groupe_plateformes.create(420, 125, "img_plateforme_mini");
 
 
+    this.groupe_plateformes.create(-13, 240, "cible_g");
+    this.groupe_plateformes.create(811, 330, "cible_d");
+    
+  
+  
+  
+
 
 
     // ajout d'un texte distintcif  du niveau
