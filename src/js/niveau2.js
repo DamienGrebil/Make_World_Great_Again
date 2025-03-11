@@ -14,6 +14,7 @@ export default class niveau2 extends Phaser.Scene {
     this.load.image("img_porte1", "src/assets/porte1.png");
     this.load.image("img_porte2", "src/assets/porte2.png");
     this.load.image("img_perso", "src/assets/perso.png");
+    this.load.image("img_bombe", "src/assets/bombe.png")
   }
 
 
@@ -53,6 +54,16 @@ export default class niveau2 extends Phaser.Scene {
     this.physics.add.collider(this.player, calque_background_2);
     this.cameras.main.startFollow(this.player);
     this.clavier = this.input.keyboard.createCursorKeys();
+    bombe = this.physics.add.group();
+    this.physics.add.collider(bombe, groupe_plateformes);
+    
+
+    var une_bombe = bombe.create(500, 16, "img_bombe");
+    une_bombe.setBounce(0.8);
+    une_bombe.setCollideWorldBounds(true);
+    une_bombe.setVelocity(Phaser.Math.Between(-200, 200), 20);
+    une_bombe.allowGravity = false;
+    this.physics.add.collider(player, bombe, chocAvecBombe, null, this);
     }
 
   update() {
@@ -87,4 +98,12 @@ export default class niveau2 extends Phaser.Scene {
     }
   }
 }
-
+  
+function chocAvecBombe(un_player, une_bombe) { // fonction appelée lorsqu'une bombe touche le joueur
+  console.log("hit"); //debug 
+  this.physics.pause(); // on met le jeu en pause
+  player.setTint(0xff00ff); // on change la couleur du joueur
+  player.anims.play("anim_face"); // on joue l'animation "anim_face"
+  gameOver = true; // on met la variable gameOver à true
+  killPlayer(this); // on appelle la fonction killPlayer
+}

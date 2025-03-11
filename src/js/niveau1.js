@@ -3,7 +3,6 @@ import selection from "/src/js/selection.js";
 var player; // désigne le sprite du joueur
 var clavier; // pour la gestion du clavier
 var groupe_plateformes;
-var bombe;
 var gameOver = false;
 var boutonFeu;
 var cursors;
@@ -16,8 +15,6 @@ export default class niveau1 extends Phaser.Scene {
     });
   }
   preload() {
-    this.load.image("img_bombe", "src/assets/bombe.png")
-    this.load.image("img_bombe", "src/assets/bombe.png");
     cursors = this.input.keyboard.createCursorKeys();
     boutonFeu = this.input.keyboard.addKey('A');
     this.load.image("bullet", "src/assets/balle.png");
@@ -152,6 +149,8 @@ function tirer(player) {
     bullet.body.allowGravity = false;
     bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
   }
+
+
 
 function hit(bullet, groupeCibles) {
     groupeCibles.pointsVie--;
