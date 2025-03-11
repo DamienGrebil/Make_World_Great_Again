@@ -33,11 +33,15 @@ export default class selection extends Phaser.Scene {
     this.load.image("img_ciel", "src/assets/sky.png");
     this.load.image("img_drapeau", "src/assets/drapeau.png")
     this.load.image("img_plateforme", "src/assets/platform.png");
+    this.load.image("img_plateforme_b", "src/assets/platform_b.png");
+    this.load.image("img_plateforme_be", "src/assets/platform_be.png");
+    this.load.image("img_plateforme_mini", "src/assets/platform_mini.png");
     this.load.image("img_bombe", "src/assets/bombe.png")
     this.load.spritesheet("img_perso", "src/assets/trump.png", {
       frameWidth: 32,
       frameHeight: 48,
     });
+    this.load.image("img_maison_b", "src/assets/maison_blanche.png")
     this.load.image("img_trump_menu", "src/assets/trump menu.png")
     this.load.image("img_fond_menu", "src/assets/fond_menu.png")
     this.load.image("img_play", "src/assets/porte.transparente.png")
