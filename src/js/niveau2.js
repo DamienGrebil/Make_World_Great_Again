@@ -11,7 +11,6 @@ export default class niveau2 extends Phaser.Scene {
   }
   preload() {
     this.load.image("Phaser_tuile_de_jeu_v0", "src/assets/pixil-frame-0 (3).png");
-
     // chargement de la carte
     this.load.tilemapTiledJSON("carte", "src/assets/mapNiv2.json");
     this.load.image("img_porte1", "src/assets/porte1.png");
@@ -22,14 +21,12 @@ export default class niveau2 extends Phaser.Scene {
     this.load.image("img_plateforme_b", "src/assets/platform_b.png");
   }
 
-
   create() {
 
     groupe_plateformes = this.physics.add.staticGroup();
 
     // chargement de la carte
     const carteDuNiveau = this.add.tilemap("carte");
-
     // chargement du jeu de tuiles
     const tileset = carteDuNiveau.addTilesetImage(
       "tuile_de_jeuv0",
@@ -40,20 +37,17 @@ export default class niveau2 extends Phaser.Scene {
       "background",
       tileset
     );
-
     // chargement du calque calque_background_2
     const calque_background_2 = carteDuNiveau.createLayer(
       "background2",
       tileset
     );
-
     // chargement du calque calque_plateformes
     const calque_plateformes = carteDuNiveau.createLayer(
       "plateformes",
       tileset
     );
     calque_plateformes.setCollisionByProperty({ estSolide: true });
-
     // redimentionnement du monde avec les dimensions calculées via tiled
     this.physics.world.setBounds(0, 0, 3200, 640);
     //  ajout du champs de la caméra de taille identique à celle du monde
@@ -132,10 +126,10 @@ export default class niveau2 extends Phaser.Scene {
   }
 }
 
-
 function chocAvecBombe(un_player, une_bombe) {
   this.physics.pause();
   this.player.setTint(0xff0000);
   this.player.anims.play("anim_face");
   gameOver = true;
-} 
+  fct.killPlayer(this);
+}

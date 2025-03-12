@@ -84,3 +84,4 @@ export function killPlayer(scene) {
         scene.physics.resume();// Resumes the physics simulation
     });
 }
+
