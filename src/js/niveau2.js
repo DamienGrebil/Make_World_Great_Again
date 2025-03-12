@@ -1,4 +1,6 @@
 import * as fct from "/src/js/fonctions.js";
+var groupe_bombes; 
+var gameOver = false;
 export default class niveau2 extends Phaser.Scene {
   // constructeur de la classe
   constructor() {
@@ -61,6 +63,26 @@ export default class niveau2 extends Phaser.Scene {
     this.cameras.main.startFollow(this.player);
     this.clavier = this.input.keyboard.createCursorKeys();
 
+    groupe_bombes = this.physics.add.group(); 
+    this.physics.add.collider(groupe_bombes, calque_plateformes);
+    for (let i = 0; i < 5; i++) { // Modifier le 5 pour changer le nombre de bombes
+      let x = Phaser.Math.Between(50, 750); // Position X aléatoire
+      let y = Phaser.Math.Between(10, 300); // Position Y aléatoire (hauteur aléatoire)
+      
+      let une_bombe = groupe_bombes.create(x, y, "img_bombe");
+  
+      une_bombe.setBounce(Phaser.Math.FloatBetween(0.6, 1)); // Rebond aléatoire entre 0.6 et 1
+      une_bombe.setCollideWorldBounds(true);
+      
+      let vitesseX = Phaser.Math.Between(-200, 200); // Vitesse X aléatoire
+      let vitesseY = Phaser.Math.Between(10, 100);  // Vitesse Y aléatoire pour des rebonds différents
+      
+      une_bombe.setVelocity(vitesseX, vitesseY);
+      une_bombe.allowGravity = false;
+  }
+  
+  // Gestion de la collision entre le joueur et les bombes
+  this.physics.add.collider(this.player, groupe_bombes, chocAvecBombe, null, this);
     }
 
   update() {
@@ -96,11 +118,10 @@ export default class niveau2 extends Phaser.Scene {
   }
 }
   
-function chocAvecBombe(un_player, une_bombe) { // fonction appelée lorsqu'une bombe touche le joueur
-  console.log("hit"); //debug 
-  this.physics.pause(); // on met le jeu en pause
-  player.setTint(0xff00ff); // on change la couleur du joueur
-  player.anims.play("anim_face"); // on joue l'animation "anim_face"
-  gameOver = true; // on met la variable gameOver à true
-  killPlayer(this); // on appelle la fonction killPlayer
-}
+
+function chocAvecBombe(un_player, une_bombe) {
+  this.physics.pause();
+  this.player.setTint(0xff0000);
+  this.player.anims.play("anim_face");
+  gameOver = true;
+} 
