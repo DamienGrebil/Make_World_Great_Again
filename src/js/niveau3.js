@@ -7,7 +7,7 @@ var bossHealthBar;
 var bossHealthText;
 var groupeBullets;
 var bossBullets;
-var playerHealth = 5; // Changed to 5 (Fixed)
+var playerHealth = 3; // Changed to 5 (Fixed)
 var playerHealthText;
 var bossHealthBarBackground;
 var bossHealthBarTimer;
