@@ -69,6 +69,7 @@ export default class niveau2 extends Phaser.Scene {
     this.cameras.main.startFollow(this.player);
     this.clavier = this.input.keyboard.createCursorKeys();
     this.groupe_plateformes = this.physics.add.staticGroup();
+    this.physics.add.collider(this.player, this.groupe_plateformes)
     this.groupe_plateformes.create(2400, 150, "img_plateforme_be");
     this.cabine = this.physics.add.staticSprite(2400, 115, "img_cabine");
 
@@ -122,6 +123,10 @@ export default class niveau2 extends Phaser.Scene {
       if (this.physics.overlap(this.player, this.porte3)) {
         console.log("niveau 3 : passage au niveau 3");
         this.scene.switch("niveau3");
+      }
+      if (this.physics.overlap(this.player, this.cabine)) {
+        console.log("mini defi : passage au defi");
+        this.scene.switch("defi");
       }
     }
   }

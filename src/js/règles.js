@@ -12,17 +12,15 @@ export default class règles extends Phaser.Scene {
   }
 
   create() {
-    this.add.image(400, 300, "img_ciel");
+    this.add.image(400, 300, "img_regle");
     this.groupe_plateformes = this.physics.add.staticGroup();
     this.groupe_plateformes.create(200, 584, "img_plateforme");
     this.groupe_plateformes.create(600, 584, "img_plateforme");
-    // ajout d'un texte distintcif  du niveau
-    this.add.text(400, 100, "Voici les règles du jeu", {
-      fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
-      fontSize: "22pt"
-    });
 
+
+    this.physics.add.collider(this.player, this.groupe_plateformes) 
     
+
     this.porte2 = this.physics.add.staticSprite(750, 550, "img_porte2");
 
     this.player = this.physics.add.sprite(100, 450, "img_perso");
@@ -30,7 +28,7 @@ export default class règles extends Phaser.Scene {
     this.player.setBounce(0.2);
     this.player.setCollideWorldBounds(true);
     this.clavier = this.input.keyboard.createCursorKeys();
-    this.physics.add.collider(this.player, this.groupe_plateformes);
+    
   }
 
   update() {
