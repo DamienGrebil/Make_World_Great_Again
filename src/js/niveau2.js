@@ -25,6 +25,8 @@ export default class niveau2 extends Phaser.Scene {
 
     groupe_plateformes = this.physics.add.staticGroup();
 
+
+
     // chargement de la carte
     const carteDuNiveau = this.add.tilemap("carte");
     // chargement du jeu de tuiles
@@ -48,6 +50,7 @@ export default class niveau2 extends Phaser.Scene {
       tileset
     );
     calque_plateformes.setCollisionByProperty({ estSolide: true });
+
     // redimentionnement du monde avec les dimensions calculées via tiled
     this.physics.world.setBounds(0, 0, 3200, 640);
     //  ajout du champs de la caméra de taille identique à celle du monde
@@ -68,6 +71,12 @@ export default class niveau2 extends Phaser.Scene {
     this.physics.add.collider(this.player, this.groupe_plateformes)
     this.groupe_plateformes.create(2400, 150, "img_plateforme_be");
     this.cabine = this.physics.add.staticSprite(2400, 115, "img_cabine");
+
+    this.add.text(3000, 300, "Appelle le propriétaire du bunker\npour qu'il vienne t'ouvrir ;)", {
+      fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
+      fontSize: "12pt",
+      color: "#000000" // Définit la couleur du texte en noir
+    });
 
     groupe_bombes = this.physics.add.group();
     this.physics.add.collider(groupe_bombes, calque_plateformes);
