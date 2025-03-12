@@ -77,7 +77,7 @@ export default class niveau2 extends Phaser.Scene {
     this.groupe_plateformes.create(2400, 150, "img_plateforme_be");
     
 
-    this.add.text(3000, 300, "Appelle le propriétaire du bunker\npour qu'il vienne t'ouvrir ;)", {
+    this.add.text(3000, 300, "Appelle le propriétaire\n du bunker\npour qu'il vienne t'ouvrir ;)", {
       fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
       fontSize: "12pt",
       color: "#000000" // Définit la couleur du texte en noir
