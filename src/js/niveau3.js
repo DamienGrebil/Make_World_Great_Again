@@ -12,6 +12,7 @@ var playerHealthText;
 var bossHealthBarBackground;
 var bossHealthBarTimer;
 var boutonFeu; // New: Variable for the fire button
+var groupe_bombes; //New : groupe for the bombe
 
 export default class niveau3 extends Phaser.Scene {
   constructor() {
@@ -27,6 +28,7 @@ export default class niveau3 extends Phaser.Scene {
     this.load.image("bullet", "src/assets/sombrero.png");
     this.load.image("Manu_macron", "src/assets/MAnu.png");
     this.load.image("bossBullet", "src/assets/baguette.png");
+    this.load.image("croissant", "src/assets/croissant.png"); //New : load the croissant
   }
 
   create() {
@@ -107,8 +109,37 @@ export default class niveau3 extends Phaser.Scene {
     bossBullets = this.physics.add.group();
     this.physics.add.overlap(groupeBullets, boss, this.hitBoss, null, this);
     this.physics.add.overlap(this.player, bossBullets, this.playerHitByBossBullet, null, this);
-    
-    this.bossPattern(boss);
+
+     // Creation des bombes
+    groupe_bombes = this.physics.add.group();//create the group
+    this.physics.add.collider(groupe_bombes, this.groupe_plateformes_bunker); //add the collision between the bomb and the plateforme
+        for (let i = 0; i < 4; i++) { //create 5 bomb
+          let x = Phaser.Math.Between(100, 800); // Random X position
+          let y = Phaser.Math.Between(100, 400); // random Y position
+
+          let une_bombe = groupe_bombes.create(x, y, "croissant"); //create the bomb with the croissant image
+          une_bombe.setBounce(Phaser.Math.FloatBetween(0.8, 1)); // Add a random bounce
+          une_bombe.setCollideWorldBounds(true); // set the collision with the edge
+
+          //Add random velocity
+          let vitesseX = Phaser.Math.Between(-200, 200);
+          let vitesseY = Phaser.Math.Between(100, 130);
+          une_bombe.setVelocity(vitesseX, vitesseY);
+          une_bombe.allowGravity = false; // No gravity
+    }
+    //gestion de la collision entre les bombes et le joueur
+      this.physics.add.collider(this.player, groupe_bombes, this.chocAvecBombe, null, this);
+
+    this.bossPattern(boss);//call the boss pattern
+  }
+   chocAvecBombe(un_player, une_bombe) { // function call when the player hit a bomb
+        //check if the player is not invincible
+      playerHealth -=1; //remove 1hp at the player
+      playerHealthText.setText("Player Health: " + playerHealth);//update the text of the player health
+      if(playerHealth <= 0){ //if the player have 0 hp or less
+          this.killPlayer();//Call the function killPlayer in this file
+      }
+      une_bombe.destroy();//destoy the bomb
   }
 
   hitBoss(boss, bullet) {
