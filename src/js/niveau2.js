@@ -52,6 +52,8 @@ export default class niveau2 extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, 3200, 640);
     //  ajout du champs de la caméra de taille identique à celle du monde
     this.cameras.main.setBounds(0, 0, 3200, 640);
+    // Création de la cabine
+    this.cabine = this.physics.add.staticSprite(2400, 115, "img_cabine");
     // ancrage de la caméra sur le joueur
     this.porte_retour = this.physics.add.staticSprite(100, 525, "img_porte2");
     this.porte3 = this.physics.add.staticSprite(3150, 525, "img_porte3");
@@ -67,7 +69,7 @@ export default class niveau2 extends Phaser.Scene {
     this.groupe_plateformes = this.physics.add.staticGroup();
     this.physics.add.collider(this.player, this.groupe_plateformes)
     this.groupe_plateformes.create(2400, 150, "img_plateforme_be");
-    this.cabine = this.physics.add.staticSprite(2400, 115, "img_cabine");
+    
 
     groupe_bombes = this.physics.add.group();
     this.physics.add.collider(groupe_bombes, calque_plateformes);
@@ -122,7 +124,7 @@ export default class niveau2 extends Phaser.Scene {
       }
       if (this.physics.overlap(this.player, this.cabine)) {
         console.log("mini defi : passage au defi");
-        this.scene.switch("defi");
+        this.scene.switch("minijeu");
       }
     }
   }
