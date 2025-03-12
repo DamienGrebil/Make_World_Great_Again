@@ -61,6 +61,8 @@ export default class niveau1 extends Phaser.Scene {
     this.groupe_plateformes.create(420, 130, "img_plateforme_mini");
     this.groupe_plateformes.create(420, 125, "img_plateforme_mini");
 
+    
+
 
     
 
