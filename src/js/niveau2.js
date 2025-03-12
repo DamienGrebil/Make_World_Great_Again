@@ -55,6 +55,11 @@ export default class niveau2 extends Phaser.Scene {
     this.cabine = this.physics.add.staticSprite(2400, 115, "img_cabine");
     this.porte_retour = this.physics.add.staticSprite(100, 525, "img_porte2");
     this.porte3 = this.physics.add.staticSprite(3150, 525, "img_porte3");
+    this.add.text(2990, 300, "Appelle le propriétaire du\n bunker pour qu'il vienne\n t'ouvrir ;)", {
+      fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
+      fontSize: "12pt",
+      color: "#000000"
+    });
     this.player = this.physics.add.sprite(100, 450, "img_perso");
     this.player.body.setSize(20, 30, 6, 18);
     this.player.body.setOffset(6, 18);
@@ -69,11 +74,7 @@ export default class niveau2 extends Phaser.Scene {
     this.groupe_plateformes.create(2400, 150, "img_plateforme_be");
     
 
-    this.add.text(3000, 300, "Appelle le propriétaire du bunker\npour qu'il vienne t'ouvrir ;)", {
-      fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
-      fontSize: "12pt",
-      color: "#000000"
-    });
+
   
     groupe_bombes = this.physics.add.group();
     this.physics.add.collider(groupe_bombes, calque_plateformes);
