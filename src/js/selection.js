@@ -50,7 +50,7 @@ export default class selection extends Phaser.Scene {
     this.load.image("img_play", "src/assets/porte.transparente.png")
     this.load.image("img_porte1", "src/assets/door1.png");
     this.load.image("img_porte2", "src/assets/door2.png");
-    this.load.image("img_regles", "src/assets/porte.transparente.png");
+    this.load.image("img_porte_regle", "src/assets/porte.transparente.png");
     this.load.image("img_cabine", "src/assets/cabine.png");
     this.load.image("img_porte3", "src/assets/door3.png");
     this.load.image("img_bombe", "src/assets/bombe.png");
@@ -107,7 +107,7 @@ export default class selection extends Phaser.Scene {
 
 
     this.play = this.physics.add.staticSprite(420, 490, "img_play");
-    this.regles = this.physics.add.staticSprite(420, 550, "img_regles");
+    this.regle = this.physics.add.staticSprite(420, 550, "img_porte_regle");
 
 
 
@@ -217,12 +217,11 @@ export default class selection extends Phaser.Scene {
     }
 
     
-      if (this.physics.overlap(player, this.play))
+    if (this.physics.overlap(player, this.play))
         this.scene.switch("niveau1");
-      if (this.physics.overlap(player, this.regles)) {
-        console.log("Changement de scène vers règles"); // Debug
-        this.scene.start("règles"); // Assurez-vous que la scène "règles" existe
-      }
+    if (this.physics.overlap(player, this.regle)) 
+        this.scene.start("règles"); 
+      
     
 
     // déclenchement de la fonction tirer() si appui sur boutonFeu 
