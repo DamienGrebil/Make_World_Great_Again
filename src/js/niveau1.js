@@ -98,14 +98,12 @@ export default class niveau1 extends Phaser.Scene {
         objet.destroy();
       }
     });
-<<<<<<< HEAD
     this.add.image(100, 245, "img_agent_d");
     this.add.image(600, 245, "img_agent_g");
     this.add.image(50, 335, "img_agent_d");
     this.add.image(700, 425, "img_agent_g");
 
     this.player.direction = "right";
-=======
 
     // Create agents group
     agents = this.physics.add.group();
@@ -154,7 +152,6 @@ export default class niveau1 extends Phaser.Scene {
     this.physics.add.collider(agents, agents);
 
      gameOver = false;
->>>>>>> ab1c24c6588a1e5e622456e775b2033989aaeee8
   }
 
   update() {
@@ -195,31 +192,24 @@ export default class niveau1 extends Phaser.Scene {
       }
     }
 
-<<<<<<< HEAD
 
     if (gameOver) {
       return; // on sort de la fonction update si gameOver est true
     }
 
-=======
     if (Phaser.Input.Keyboard.JustDown(boutonFeu)) {
       tirer(player);
     }
     //if(gameOver) {
     //  return; // on sort de la fonction update si gameOver est true
     //}
->>>>>>> ab1c24c6588a1e5e622456e775b2033989aaeee8
 
   }
 }
 
 function tirer(player) {
   var coefDir;
-<<<<<<< HEAD
   if (player.direction == "left") { coefDir = -1; } else { coefDir = 1 }
-=======
-  if (player.direction == 'left') { coefDir = -1; } else { coefDir = 1 }
->>>>>>> ab1c24c6588a1e5e622456e775b2033989aaeee8
   // on crée la balle a coté du joueur
   var bullet = groupeBullets.create(player.x + (25 * coefDir), player.y - 4, 'bullet');
   // parametres physiques de la balle.
@@ -227,8 +217,6 @@ function tirer(player) {
   bullet.body.allowGravity = false;
   bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
 }
-<<<<<<< HEAD
-=======
 
 function agentTir(agent, player, groupeAgentBullets) {
   let coefDir;
@@ -245,7 +233,6 @@ function agentTir(agent, player, groupeAgentBullets) {
         agent.setTexture("img_agent_d");
     }
   }
->>>>>>> ab1c24c6588a1e5e622456e775b2033989aaeee8
 
   // Create bullet near the agent
   let agentBullet = groupeAgentBullets.create(agent.x + (25 * coefDir), agent.y - 4, 'agentBullet');
@@ -261,10 +248,7 @@ function hit(bullet, groupeCibles) {
   }
   bullet.destroy();
 }
-<<<<<<< HEAD
 
-=======
->>>>>>> ab1c24c6588a1e5e622456e775b2033989aaeee8
 export function startCountdown(scene) {
   scene.timeLeft = 10 * 60; // 10 minutes en secondes
   scene.timerText = scene.add.text(195, 0, "Temps restant: 10:00", {
@@ -308,21 +292,6 @@ export function killPlayer(scene) {
     scene.player.setVelocity(0, 0);
     scene.player.anims.stop();
   }
-<<<<<<< HEAD
-  scene.physics.pause(); // Pause physics to prevent further collisions
-
-  scene.time.delayedCall(3000, () => {
-    // Logic for respawning
-
-    if (scene.scene.key === "selection") {
-      scene.scene.restart();
-      scene.gameOver = false;
-    } else {
-      scene.scene.start(scene.scene.key);
-    }
-
-    scene.physics.resume();// Resumes the physics simulation
-=======
     // Stop agent shooting timers
   for(let timer of scene.agentShootingTimers) {
         timer.remove();
@@ -343,6 +312,5 @@ export function killPlayer(scene) {
     }
 
     scene.physics.resume(); //reprend la physique du jeu
->>>>>>> ab1c24c6588a1e5e622456e775b2033989aaeee8
   });
 }
