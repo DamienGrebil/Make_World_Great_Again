@@ -1,7 +1,10 @@
 import * as fct from "/src/js/fonctions.js";
+
 var groupe_bombes;
 var gameOver = false;
 var groupe_plateformes;
+var invincible = true; // New variable for invincibility
+
 export default class niveau2 extends Phaser.Scene {
   // constructeur de la classe
   constructor() {
@@ -90,7 +93,7 @@ export default class niveau2 extends Phaser.Scene {
     }
 
     // Gestion de la collision entre le joueur et les bombes
-    this.physics.add.collider(this.player, groupe_bombes, chocAvecBombe, null, this);
+    this.physics.add.collider(this.player, groupe_bombes, this.chocAvecBombe, null, this);
   }
 
   update() {
@@ -128,12 +131,14 @@ export default class niveau2 extends Phaser.Scene {
       }
     }
   }
-}
 
-function chocAvecBombe(un_player, une_bombe) {
-  this.physics.pause();
-  this.player.setTint(0xff0000);
-  this.player.anims.play("anim_face");
-  gameOver = true;
-  fct.killPlayer(this);
+  chocAvecBombe(un_player, une_bombe) {
+     if (!invincible){
+         this.physics.pause();
+          this.player.setTint(0xff0000);
+          this.player.anims.play("anim_face");
+          gameOver = true;
+         fct.killPlayer(this);
+      }
+  }
 }
