@@ -152,7 +152,8 @@ export default class niveau1 extends Phaser.Scene {
     this.physics.add.collider(agents, agents);
 
      gameOver = false;
-  }
+}  
+  
 
   update() {
     // déclenchement de la fonction tirer() si appui sur boutonFeu
@@ -213,7 +214,7 @@ function tirer(player) {
   // on crée la balle a coté du joueur
   var bullet = groupeBullets.create(player.x + (25 * coefDir), player.y - 4, 'bullet');
   // parametres physiques de la balle.
-  bullet.setCollideWorldBounds(true);
+  bullet.setCollideWorldBounds(false);
   bullet.body.allowGravity = false;
   bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
 }
