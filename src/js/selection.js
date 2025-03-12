@@ -88,13 +88,6 @@ export default class selection extends Phaser.Scene {
     groupe_plateformes.create(200, 584, "img_plateforme");
     groupe_plateformes.create(600, 584, "img_plateforme");
 
-    groupeCibles = this.physics.add.group({
-      key: 'cible',
-      repeat: 5,
-      setXY: { x: 24, y: 0, stepX: 107 }
-
-    });
-    this.physics.add.collider(groupeCibles, groupe_plateformes);
 
 
 
@@ -178,15 +171,7 @@ export default class selection extends Phaser.Scene {
 
     groupeBullets = this.physics.add.group();
     this.physics.add.overlap(groupeBullets, groupeCibles, hit, null, this);
-    // modification des cibles créées
-    groupeCibles.children.iterate(function (cibleTrouvee) {
-      // définition de points de vie
-      cibleTrouvee.pointsVie = Phaser.Math.Between(1, 5);;
-      // modification de la position en y
-      cibleTrouvee.y = Phaser.Math.Between(10, 250);
-      // modification du coefficient de rebond
-      cibleTrouvee.setBounce(1);
-    });
+    
     this.physics.world.on("worldbounds", function (body) {
       // on récupère l'objet surveillé
       var objet = body.gameObject;
