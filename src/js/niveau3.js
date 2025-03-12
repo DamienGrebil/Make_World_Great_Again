@@ -13,6 +13,8 @@ var bossHealthBarBackground;
 var bossHealthBarTimer;
 var boutonFeu; // New: Variable for the fire button
 var groupe_bombes; //New : groupe for the bombe
+var initialBossX = 700; // Stocker la position initial du boss
+var initialBossY = 300;
 
 export default class niveau3 extends Phaser.Scene {
   constructor() {
@@ -59,7 +61,7 @@ export default class niveau3 extends Phaser.Scene {
     this.physics.add.collider(this.player, this.groupe_plateformes_bunker);
 
     // Boss creation
-    boss = this.physics.add.sprite(700, 300, "Manu_macron");
+    boss = this.physics.add.sprite(initialBossX, initialBossY, "Manu_macron"); // Création du boss et position initial
     boss.setImmovable(true);
     boss.setCollideWorldBounds(true);
     boss.setBounce(0.3);
@@ -113,20 +115,7 @@ export default class niveau3 extends Phaser.Scene {
      // Creation des bombes
     groupe_bombes = this.physics.add.group();//create the group
     this.physics.add.collider(groupe_bombes, this.groupe_plateformes_bunker); //add the collision between the bomb and the plateforme
-        for (let i = 0; i < 4; i++) { //create 5 bomb
-          let x = Phaser.Math.Between(100, 800); // Random X position
-          let y = Phaser.Math.Between(100, 400); // random Y position
-
-          let une_bombe = groupe_bombes.create(x, y, "croissant"); //create the bomb with the croissant image
-          une_bombe.setBounce(Phaser.Math.FloatBetween(0.8, 1)); // Add a random bounce
-          une_bombe.setCollideWorldBounds(true); // set the collision with the edge
-
-          //Add random velocity
-          let vitesseX = Phaser.Math.Between(-200, 200);
-          let vitesseY = Phaser.Math.Between(100, 130);
-          une_bombe.setVelocity(vitesseX, vitesseY);
-          une_bombe.allowGravity = false; // No gravity
-    }
+       this.resetBombs();
     //gestion de la collision entre les bombes et le joueur
       this.physics.add.collider(this.player, groupe_bombes, this.chocAvecBombe, null, this);
 
@@ -141,7 +130,45 @@ export default class niveau3 extends Phaser.Scene {
       }
       une_bombe.destroy();//destoy the bomb
   }
+   //fonction pour reset les bombes
+   resetBombs(){
+     if (groupe_bombes) {
+         groupe_bombes.clear(true, true); // détruit les bombes existantes
+     }
 
+        for (let i = 0; i < 4; i++) { //create 5 bomb
+          let x = Phaser.Math.Between(100, 800); // Random X position
+          let y = Phaser.Math.Between(100, 400); // random Y position
+
+          let une_bombe = groupe_bombes.create(x, y, "croissant"); //create the bomb with the croissant image
+          une_bombe.setBounce(Phaser.Math.FloatBetween(0.8, 1)); // Add a random bounce
+          une_bombe.setCollideWorldBounds(true); // set the collision with the edge
+
+          //Add random velocity
+          let vitesseX = Phaser.Math.Between(-200, 200);
+          let vitesseY = Phaser.Math.Between(100, 130);
+          une_bombe.setVelocity(vitesseX, vitesseY);
+          une_bombe.allowGravity = false; // No gravity
+    }
+   }
+   //Fonction pour reset le boss
+   resetBoss() {
+        if (boss) {
+            boss.destroy();
+        }
+        boss = this.physics.add.sprite(initialBossX, initialBossY, "Manu_macron");
+        boss.setImmovable(true);
+        boss.setCollideWorldBounds(true);
+        boss.setBounce(0.3);
+        boss.body.setAllowGravity(false);
+        this.physics.add.collider(boss, this.groupe_plateformes_bunker);
+        boss.health = bossHealth; // Réinitialiser la santé du boss
+        boss.isDead = false; // Réinitialiser l'état de mort
+        boss.direction = "left";
+       // Réinitialiser la barre de vie du boss
+        bossHealthBar.width = 300;
+        bossHealthText.setText("Boss Health: " + boss.health);
+    }
   hitBoss(boss, bullet) {
     bullet.destroy();
     boss.health -= 5; // Changed to 5 (Fixed)
@@ -273,14 +300,17 @@ export default class niveau3 extends Phaser.Scene {
         this.player.setVelocity(0, 0); // Arrête la vitesse du joueur
         this.player.anims.stop(); // Arrête l'animation du joueur
       }
+      playerHealth = 5;//reset the player health
+      playerHealthText.setText("Player Health: " + playerHealth);
       this.physics.pause(); // Met la physique du jeu en pause (pour éviter d'autres collisions)
       this.time.delayedCall(3000, () => { // Attend 3 secondes (3000 millisecondes) avant de relancer le jeu
-          this.scene.start(this.scene.key); // Redémarre la scène en cours (respawn dans le même niveau)
+        this.resetBoss();//reset the boss
+        this.resetBombs();//reset the bombs
+          this.scene.start("niveau2"); // Redémarre la scène 2
         this.physics.resume(); // Relance la physique du jeu
         this.gameOver = false;//reset gameOver
       });
     }
-
   update() {
      if (Phaser.Input.Keyboard.JustDown(boutonFeu)) { // Changed to boutonFeu
       this.tirer(this.player);
