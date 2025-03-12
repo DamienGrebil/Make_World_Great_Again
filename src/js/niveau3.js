@@ -17,6 +17,7 @@ var initialBossX = 700;
 var initialBossY = 300;
 const bossLowerYLimit = 300;//change the limit
 const maxBombSpeed = 300;
+var son_niveau3;
 
 export default class niveau3 extends Phaser.Scene {
   constructor() {
@@ -25,6 +26,7 @@ export default class niveau3 extends Phaser.Scene {
   }
 
   preload() {
+    this.load.audio("final", "src/assets/final.mp3");
     this.load.image("img_bunker", "src/assets/bunker.png");
     this.load.image("img_plateforme_bunker", "src/assets/platform_bunker.png");
     this.load.image("img_plateforme_bunker_mini", "src/assets/platform_bunker_mini.png");
@@ -85,6 +87,16 @@ export default class niveau3 extends Phaser.Scene {
     bossBullets = this.physics.add.group();
     this.physics.add.overlap(groupeBullets, boss, this.hitBoss, null, this);
     this.physics.add.overlap(this.player, bossBullets, this.playerHitByBossBullet, null, this);
+
+    son_niveau3 = this.sound.add("final");
+
+    console.log(this.cache.audio.exists("final")); // Vérifie si le son est bien chargé
+    if (this.cache.audio.exists("final")) {
+      son_niveau3.play({ loop: true });
+    } else {
+      console.error("Le fichier audio ne s'est pas chargé correctement !");
+    }
+
 
     // Creation des bombes
     groupe_bombes = this.physics.add.group();//create the group
@@ -191,6 +203,7 @@ export default class niveau3 extends Phaser.Scene {
     bossHealthBarBackground.destroy();
     bossHealthText.destroy();
     this.cameras.main.shake(500, 0.05);
+    son_niveau3.stop();
     this.scene.switch("victoire");
   }
   

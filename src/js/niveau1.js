@@ -210,11 +210,12 @@ export default class niveau1 extends Phaser.Scene {
         this.scene.switch("selection");
       }
       if (this.physics.overlap(this.player, this.porte2)) {
-        if(bothButtonsPressed){
+        
           son_niveau1.stop();
           this.scene.switch("niveau2");
-        }
+        
       }
+
     }
 
 
