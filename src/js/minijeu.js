@@ -14,7 +14,7 @@ export default class minijeu extends Phaser.Scene {
     let image0 = this.add.image(400, 300, "img_num");
     
 
-let playButton = this.add.image(600, 300, "bouton_49.3").setInteractive();
+let playButton = this.add.image(625, 300, "bouton_49.3").setInteractive();
     playButton.on("pointerdown", () => {
       console.log("minijeu : retour vers niv2");
       this.scene.switch("niveau2");
