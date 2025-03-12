@@ -22,7 +22,7 @@ export default class niveau1 extends Phaser.Scene {
     cursors = this.input.keyboard.createCursorKeys();
     boutonFeu = this.input.keyboard.addKey('A');
     this.load.image("bullet", "src/assets/balle.png");
-    this.load.image("agentBullet", "src/assets/star.png"); // New bullet for agents
+    this.load.image("agentBullet", "src/assets/balle_ennemi.png"); // New bullet for agents
     this.load.image("cible", "src/assets/bouton.png", { frameWidth: 100, frameHeight: 32 });
   }
 
@@ -105,32 +105,33 @@ export default class niveau1 extends Phaser.Scene {
     let agent2 = agents.create(600, 245, "img_agent_g");
     let agent3 = agents.create(50, 335, "img_agent_d");
     let agent4 = agents.create(700, 425, "img_agent_g");
-    
-    // Set agents to non-static
+
+    // Set agents to static
     agents.children.iterate(function (agent) {
-        agent.setImmovable(false); 
-        agent.body.allowGravity = true;
-        agent.setCollideWorldBounds(true);
-        agent.setVelocityX(Phaser.Math.Between(-50,50));
+    agent.setImmovable(true); // Agents don't move
+    agent.body.allowGravity = false; // Agent are not affect by the gravity
+        
     });
-     //Collision between agents and platforms
+
+    //Collision between agents and platforms
     this.physics.add.collider(agents, this.groupe_plateformes);
 
     // New group for agent bullets
     groupeAgentBullets = this.physics.add.group();
 
     // Initialize agent shooting timers
+    //use a class variable to make the timer
+    this.agentShootingTimers = [];
     agents.children.iterate((agent) => {
-        this.time.addEvent({
-            delay: Phaser.Math.Between(1000, 3000), // Random delay between 1 and 3 seconds
+       let timer = this.time.addEvent({
+            delay: Phaser.Math.Between(2000, 4000), // Random delay between 1 and 3 seconds
             callback: () => {
-                if (!gameOver) {
-                  agentTir(agent, this.player, groupeAgentBullets);
-                }
+                agentTir(agent, this.player, groupeAgentBullets);
             },
             callbackScope: this,
             loop: true
         });
+        this.agentShootingTimers.push(timer);
     });
         // Collision between agent bullets and player
     this.physics.add.overlap(this.player, groupeAgentBullets, (player, bullet) => {
@@ -143,6 +144,8 @@ export default class niveau1 extends Phaser.Scene {
 
     // add a collider between the agents
     this.physics.add.collider(agents, agents);
+
+     gameOver = false;
   }
 
   update() {
@@ -183,10 +186,10 @@ export default class niveau1 extends Phaser.Scene {
     if (Phaser.Input.Keyboard.JustDown(boutonFeu)) {
       tirer(player);
     }
+    //if(gameOver) {
+    //  return; // on sort de la fonction update si gameOver est true
+    //}
 
-    if(gameOver) {
-      return; // on sort de la fonction update si gameOver est true
-    }
   }
 }
 
@@ -274,18 +277,25 @@ export function killPlayer(scene) {
     scene.player.setVelocity(0, 0);
     scene.player.anims.stop();
   }
+    // Stop agent shooting timers
+  for(let timer of scene.agentShootingTimers) {
+        timer.remove();
+    }
   scene.physics.pause(); // Pause physics to prevent further collisions
 
   scene.time.delayedCall(3000, () => {
     // Logic for respawning
 
-    if (scene.scene.key === "selection") {
+    if (scene.scene.key === "selection") { 
       scene.scene.restart();
-      scene.gameOver = false;
+        scene.gameOver = false; 
+        
     } else {
-      scene.scene.start(scene.scene.key);
+        
+        scene.scene.start(scene.scene.key); //recomence la scene 
+
     }
 
-    scene.physics.resume();// Resumes the physics simulation
+    scene.physics.resume(); //reprend la physique du jeu
   });
 }
