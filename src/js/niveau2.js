@@ -1,7 +1,10 @@
 import * as fct from "/src/js/fonctions.js";
+
 var groupe_bombes;
 var gameOver = false;
 var groupe_plateformes;
+var invincible = true; // New variable for invincibility
+
 export default class niveau2 extends Phaser.Scene {
   // constructeur de la classe
   constructor() {
@@ -55,6 +58,8 @@ export default class niveau2 extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, 3200, 640);
     //  ajout du champs de la caméra de taille identique à celle du monde
     this.cameras.main.setBounds(0, 0, 3200, 640);
+    // Création de la cabine
+    this.cabine = this.physics.add.staticSprite(2400, 115, "img_cabine");
     // ancrage de la caméra sur le joueur
     this.porte_retour = this.physics.add.staticSprite(100, 525, "img_porte2");
     this.porte3 = this.physics.add.staticSprite(3150, 525, "img_porte3");
@@ -70,7 +75,7 @@ export default class niveau2 extends Phaser.Scene {
     this.groupe_plateformes = this.physics.add.staticGroup();
     this.physics.add.collider(this.player, this.groupe_plateformes)
     this.groupe_plateformes.create(2400, 150, "img_plateforme_be");
-    this.cabine = this.physics.add.staticSprite(2400, 115, "img_cabine");
+    
 
     this.add.text(3000, 300, "Appelle le propriétaire du bunker\npour qu'il vienne t'ouvrir ;)", {
       fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
@@ -97,7 +102,7 @@ export default class niveau2 extends Phaser.Scene {
     }
 
     // Gestion de la collision entre le joueur et les bombes
-    this.physics.add.collider(this.player, groupe_bombes, chocAvecBombe, null, this);
+    this.physics.add.collider(this.player, groupe_bombes, this.chocAvecBombe, null, this);
   }
 
   update() {
@@ -131,16 +136,18 @@ export default class niveau2 extends Phaser.Scene {
       }
       if (this.physics.overlap(this.player, this.cabine)) {
         console.log("mini defi : passage au defi");
-        this.scene.switch("defi");
+        this.scene.switch("minijeu");
       }
     }
   }
-}
 
-function chocAvecBombe(un_player, une_bombe) {
-  this.physics.pause();
-  this.player.setTint(0xff0000);
-  this.player.anims.play("anim_face");
-  gameOver = true;
-  fct.killPlayer(this);
+  chocAvecBombe(un_player, une_bombe) {
+     if (!invincible){
+         this.physics.pause();
+          this.player.setTint(0xff0000);
+          this.player.anims.play("anim_face");
+          gameOver = true;
+         fct.killPlayer(this);
+      }
+  }
 }

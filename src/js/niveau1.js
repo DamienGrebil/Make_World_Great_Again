@@ -31,7 +31,7 @@ export default class niveau1 extends Phaser.Scene {
     this.load.image("cible", "src/assets/bouton.png", { frameWidth: 100, frameHeight: 32 }); // Chargement de l'image du bouton non appuyé
     this.load.image("cible_d", "src/assets/cible_d.png"); // Chargement de l'image du bouton droite (non appuyé)
     this.load.image("cible_g", "src/assets/cible_g.png"); // Chargement de l'image du bouton gauche (non appuyé)
-    this.load.image("bouton_appuye", "src/assets/bouton_appuye.png"); // Chargement de l'image du bouton appuyé
+    this.load.image("bouton_appuye", "src/assets/bouton_appuyé.png"); // Chargement de l'image du bouton appuyé
   }
 
   create() {
