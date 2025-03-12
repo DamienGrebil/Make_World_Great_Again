@@ -7,19 +7,21 @@ var bossHealthBar;
 var bossHealthText;
 var groupeBullets;
 var bossBullets;
-var playerHealth = 4; // Changed to 5 (Fixed)
+var playerHealth = 5;
 var playerHealthText;
 var bossHealthBarBackground;
 var bossHealthBarTimer;
-var boutonFeu; // New: Variable for the fire button
-var groupe_bombes; //New : groupe for the bombe
-var initialBossX = 700; // Stocker la position initial du boss
+var boutonFeu;
+var groupe_bombes;
+var initialBossX = 700;
 var initialBossY = 300;
+const bossLowerYLimit = 300;//change the limit
+const maxBombSpeed = 300;
 
 export default class niveau3 extends Phaser.Scene {
   constructor() {
     super({ key: "niveau3" });
-    this.gameOver = false; // initialize the variable
+    this.gameOver = false;
   }
 
   preload() {
@@ -30,7 +32,7 @@ export default class niveau3 extends Phaser.Scene {
     this.load.image("bullet", "src/assets/sombrero.png");
     this.load.image("Manu_macron", "src/assets/MAnu.png");
     this.load.image("bossBullet", "src/assets/baguette.png");
-    this.load.image("croissant", "src/assets/croissant.png"); //New : load the croissant
+    this.load.image("croissant", "src/assets/croissant.png");
   }
 
   create() {
@@ -44,19 +46,15 @@ export default class niveau3 extends Phaser.Scene {
     this.groupe_plateformes_bunker.create(150, 334, "img_plateforme_bunker_mini");
     this.groupe_plateformes_bunker.create(170, 334, "img_plateforme_bunker_mini");
     this.groupe_plateformes_bunker.create(800, 310, "img_plateforme_bunker_mini");
-
-    this.porte_retour = this.physics.add.staticSprite(100, 409, "img_porte3");
-
     this.player = this.physics.add.sprite(100, 409, "img_perso");
+    this.porte_retour = this.physics.add.staticSprite(100, 409, "img_porte3");
     this.player.setBounce(0.2);
     this.player.setCollideWorldBounds(true);
     this.player.direction = "right";
     this.clavier = this.input.keyboard.createCursorKeys();
-    boutonFeu = this.input.keyboard.addKey('A'); // New: Bind the A key to boutonFeu
+    boutonFeu = this.input.keyboard.addKey('A');
     this.physics.add.collider(this.player, this.groupe_plateformes_bunker);
-
-    // Boss creation
-    boss = this.physics.add.sprite(initialBossX, initialBossY, "Manu_macron"); // Création du boss et position initial
+    boss = this.physics.add.sprite(initialBossX, initialBossY, "Manu_macron");
     boss.setImmovable(true);
     boss.setCollideWorldBounds(true);
     boss.setBounce(0.3);
@@ -65,8 +63,6 @@ export default class niveau3 extends Phaser.Scene {
     boss.health = bossHealth;
     boss.isDead = false;
     boss.direction = "left";
-
-    // Boss health bar
     let healthBarWidth = 300;
     let healthBarHeight = 20;
     let healthBarX = 400;
@@ -79,29 +75,12 @@ export default class niveau3 extends Phaser.Scene {
     bossHealthBar.setScrollFactor(0);
     bossHealthBarBackground.setVisible(false);
     bossHealthBar.setVisible(false);
-
-    bossHealthText = this.add.text(healthBarX, healthBarY, "Boss Health: " + boss.health, {
-      fontSize: "20px",
-      fill: "#ffffff",
-      fontFamily: "Arial",
-      backgroundColor: "#000000",
-      padding: { x: 10, y: 5 },
-    });
+    bossHealthText = this.add.text(healthBarX, healthBarY, "Boss Health: " + boss.health, { fontSize: "20px", fill: "#ffffff", fontFamily: "Arial", backgroundColor: "#000000", padding: { x: 10, y: 5 }, });
     bossHealthText.setOrigin(0.5, 0.5);
     bossHealthText.setScrollFactor(0);
     bossHealthText.setVisible(false);
-
-    // Player health text
-    playerHealthText = this.add.text(16, 40, "Player Health: " + playerHealth, { //use the new playerHealth (Fixed)
-      fontSize: "20px",
-      fill: "#ffffff",
-      fontFamily: "Arial",
-      backgroundColor: "#000000",
-      padding: { x: 10, y: 5 },
-    });
+    playerHealthText = this.add.text(16, 40, "Player Health: " + playerHealth, { fontSize: "20px", fill: "#ffffff", fontFamily: "Arial", backgroundColor: "#000000", padding: { x: 10, y: 5 }, });
     playerHealthText.setScrollFactor(0);
-
-    // Bullets
     groupeBullets = this.physics.add.group();
     bossBullets = this.physics.add.group();
     this.physics.add.overlap(groupeBullets, boss, this.hitBoss, null, this);
@@ -173,7 +152,6 @@ export default class niveau3 extends Phaser.Scene {
       bossHealthBar.setVisible(true);//make visible the healthBar (fix)
       bossHealthText.setVisible(true);//make visible the healthBar (fix)
     }
-
     let healthPercentage = boss.health / bossHealth;
     bossHealthBar.width = 300 * healthPercentage;
     bossHealthText.setText("Boss Health: " + boss.health);
@@ -187,13 +165,12 @@ export default class niveau3 extends Phaser.Scene {
   }
   // New Function for player hit by boss
   playerHitByBossBullet(player, bullet) {
-    bullet.destroy(); // Destroy the bullet
-    playerHealth--; // Decrement the player's health
-    playerHealthText.setText("Player Health: " + playerHealth); // Update player health text
-
+    bullet.destroy();
+    playerHealth--;
+    playerHealthText.setText("Player Health: " + playerHealth);
     if (playerHealth <= 0) {
-      this.killPlayer();// Call the killPlayer function in this file 
-      this.gameOver = true;//set gameOver 
+      this.killPlayer();
+      this.gameOver = true;
     }
   }
   // New: Boss's bullet attack
@@ -218,10 +195,9 @@ export default class niveau3 extends Phaser.Scene {
   }
   
   bossPattern(boss) {
-    let bossPhase = 1; // start with phase 1
-    // Boss Movement
+    let bossPhase = 1;
     this.time.addEvent({
-      delay: 2000, // how often the boss check the position of the player
+      delay: 2000,
       callback: () => {
         if (!boss.isDead) {
           //Calculate the dist between the boss and the player
@@ -256,13 +232,18 @@ export default class niveau3 extends Phaser.Scene {
           if (distance < 100) {
             boss.setVelocityX(0);
           }
+           if (boss.y > bossLowerYLimit) {
+            boss.setVelocityY(-100);
+          }
+           if (boss.y > 400) { // If boss goes below the limit
+             boss.setVelocityY(-100); //force the boss to go up
+            }
         }
       },
       loop: true,
     });
-    // Phase change
     this.time.addEvent({
-      delay: 5000, // Change phase every 5 seconds
+      delay: 5000,
       callback: () => {
         if (!boss.isDead) {
           if (boss.x < 200 || boss.x > 800) { // if boss on the side of the map, the phase change
@@ -274,9 +255,8 @@ export default class niveau3 extends Phaser.Scene {
       },
       loop: true,
     });
-    //shoot
     this.time.addEvent({
-      delay: Phaser.Math.Between(1000, 2000), // Random delay between 1 and 2 seconds
+      delay: Phaser.Math.Between(1000, 2000),
       callback: () => {
         this.bossShoot(boss);
       },
@@ -307,17 +287,14 @@ export default class niveau3 extends Phaser.Scene {
     if (Phaser.Input.Keyboard.JustDown(boutonFeu)) { // Changed to boutonFeu
       this.tirer(this.player);
     }
-
     if (this.clavier.left.isDown) {
       this.player.setVelocityX(-160);
       this.player.anims.play("anim_tourne_gauche", true);
       this.player.direction = "left";
-
     } else if (this.clavier.right.isDown) {
       this.player.setVelocityX(160);
       this.player.anims.play("anim_tourne_droite", true);
       this.player.direction = "right";
-
     } else {
       this.player.setVelocityX(0);
       this.player.anims.play("anim_face");
@@ -325,10 +302,12 @@ export default class niveau3 extends Phaser.Scene {
     if (this.clavier.up.isDown && this.player.body.touching.down) {
       this.player.setVelocityY(-330);
     }
-
     if (this.clavier.down.isDown) {
       this.player.setVelocityY(260);
       this.player.anims.play("anim_face");
+    }
+    if (this.gameOver) {
+      return;
     }
     if (this.gameOver) {
       return;
