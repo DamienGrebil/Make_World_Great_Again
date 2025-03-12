@@ -13,6 +13,8 @@ var boutonFeu;
 var cursors;
 var groupeBullets;
 var groupeCibles;
+var son_time;
+
 
 // définition de la classe "selection"
 export default class selection extends Phaser.Scene {
@@ -30,6 +32,8 @@ export default class selection extends Phaser.Scene {
    */
   preload() {
     // tous les assets du jeu sont placés dans le sous-répertoire src/assets/
+    this.load.audio("time", "src/assets/hans-zimmer-time.mp3");
+
     this.load.image("img_ciel", "src/assets/sky.png");
     this.load.image("img_regle", "src/assets/regle menu.png");
     this.load.image("img_drapeau", "src/assets/drapeau.png")
@@ -60,6 +64,11 @@ export default class selection extends Phaser.Scene {
     this.load.image("cible_d", "src/assets/bouton_d.png");
     this.load.image("cible_g", "src/assets/bouton_g.png");
     this.load.image("img_victoire", "src/assets/VICTOIRE.png");
+
+    // on charge deux fichiers audio avec les identifiants coupDeFeu et background
+
+
+
   }
 
   /***********************************************************************/
@@ -74,7 +83,29 @@ export default class selection extends Phaser.Scene {
 
     // On ajoute une simple image de fond, le ciel, au centre de la zone affichée (400, 300)
     // Par défaut le point d'ancrage d'une image est le centre de cette derniere
+
+
     this.add.image(400, 290, "img_fond_menu");
+
+
+
+
+    // ajout des sons au gestionnaire sound
+    // recupération de variables pour manipuler le son
+
+
+    son_time = this.sound.add("time");
+
+    console.log(this.cache.audio.exists("time")); // Vérifie si le son est bien chargé
+    if (this.cache.audio.exists("time")) {
+      son_time.play({ loop: true });
+    } else {
+      console.error("Le fichier audio ne s'est pas chargé correctement !");
+    }
+
+
+
+
 
     // la création d'un groupes permet de gérer simultanément les éléments d'une meme famille
     //  Le groupe groupe_plateformes contiendra le sol et deux platesformes sur lesquelles sauter
@@ -166,7 +197,7 @@ export default class selection extends Phaser.Scene {
 
     groupeBullets = this.physics.add.group();
     this.physics.add.overlap(groupeBullets, groupeCibles, hit, null, this);
-    
+
     this.physics.world.on("worldbounds", function (body) {
       // on récupère l'objet surveillé
       var objet = body.gameObject;
@@ -183,6 +214,8 @@ export default class selection extends Phaser.Scene {
 /***********************************************************************/
 
   update() {
+
+
     // déclenchement de la fonction tirer() si appui sur boutonFeu 
     if (Phaser.Input.Keyboard.JustDown(boutonFeu)) {
       console.log("Tir déclenché !");
@@ -200,8 +233,8 @@ export default class selection extends Phaser.Scene {
     } else {
       player.setVelocityX(0);
       player.anims.play("anim_face");
-    } 
-    
+    }
+
     if (clavier.down.isDown) {
       player.setVelocityY(300);
       player.anims.play("anim_face");
@@ -211,20 +244,25 @@ export default class selection extends Phaser.Scene {
       player.setVelocityY(-330);
     }
 
-    
-    if (this.physics.overlap(player, this.play))
-        this.scene.switch("niveau1");
-    if (this.physics.overlap(player, this.regle)) 
-        this.scene.start("règles"); 
-      
-    
+
+    if (this.physics.overlap(player, this.play)) {
+
+      son_time.stop();
+      this.scene.switch("niveau1");
+    }
+
+    if (this.physics.overlap(player, this.regle)) {
+      son_time.stop();
+      this.scene.start("règles");
+    }
+
 
     // déclenchement de la fonction tirer() si appui sur boutonFeu 
     if (Phaser.Input.Keyboard.JustDown(boutonFeu)) {
       tirer(player);
     }
-  
-    if(gameOver) {
+
+    if (gameOver) {
       return; // on sort de la fonction update si gameOver est true
     }
   }
