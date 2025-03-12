@@ -34,6 +34,8 @@ export default class niveau3 extends Phaser.Scene {
     this.porte_retour = this.physics.add.staticSprite(100, 409, "img_porte3");
 
     this.player = this.physics.add.sprite(100, 409, "img_perso");
+    this.player.body.setSize(20, 30, 6, 18); // taille du rectangle de collision
+    this.player.body.setOffset(6, 18); // décalage du rectangle de collision
     this.player.refreshBody();
     this.player.setBounce(0.2);
     this.player.setCollideWorldBounds(true);

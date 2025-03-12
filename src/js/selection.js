@@ -51,6 +51,7 @@ export default class selection extends Phaser.Scene {
     this.load.image("img_porte1", "src/assets/door1.png");
     this.load.image("img_porte2", "src/assets/door2.png");
     this.load.image("img_regles", "src/assets/porte.transparente.png");
+    this.load.image("img_cabine", "src/assets/cabine.png");
     this.load.image("img_porte3", "src/assets/door3.png");
     this.load.image("img_bombe", "src/assets/bombe.png");
     cursors = this.input.keyboard.createCursorKeys();
@@ -98,6 +99,8 @@ export default class selection extends Phaser.Scene {
     player = this.physics.add.sprite(100, 450, "img_perso");
 
     //  propriétées physiqyes de l'objet player :
+    player.body.setSize(20, 30, 6, 18); // taille du rectangle de collision
+    player.body.setOffset(6, 18); // décalage du rectangle de collision
     player.setBounce(0.2); // on donne un petit coefficient de rebond
     player.setCollideWorldBounds(true); // le player se cognera contre les bords du monde
     player.direction = 'right';
