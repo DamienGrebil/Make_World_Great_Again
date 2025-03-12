@@ -12,7 +12,7 @@ export default class règles extends Phaser.Scene {
         });
     }
     preload() {
-        this.load.image("img_regle", "src/assets/regle menu.png");
+        this.load.image("img_regle", "src/assets/règle menu.png");
         this.load.image("img_plateforme", "src/assets/platform.png");
         this.load.spritesheet("img_perso", "src/assets/trump.png", {
             frameWidth: 32,

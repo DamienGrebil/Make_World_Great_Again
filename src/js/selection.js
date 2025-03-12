@@ -59,6 +59,7 @@ export default class selection extends Phaser.Scene {
     this.load.image("bullet", "src/assets/balle.png");
     this.load.image("cible_d", "src/assets/bouton_d.png");
     this.load.image("cible_g", "src/assets/bouton_g.png");
+    this.load.image("img_victoire", "src/assets/VICTOIRE.png");
   }
 
   /***********************************************************************/
@@ -162,12 +163,6 @@ export default class selection extends Phaser.Scene {
       x = Phaser.Math.Between(0, 400);
     }
 
-    var une_bombe = bombe.create(x, 16, "img_bombe");
-    une_bombe.setBounce(0.8);
-    une_bombe.setCollideWorldBounds(true);
-    une_bombe.setVelocity(Phaser.Math.Between(-200, 200), 20);
-    une_bombe.allowGravity = false;
-    this.physics.add.collider(player, bombe, chocAvecBombe, null, this);
 
     groupeBullets = this.physics.add.group();
     this.physics.add.overlap(groupeBullets, groupeCibles, hit, null, this);
