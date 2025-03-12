@@ -3,6 +3,7 @@ import * as fct from "/src/js/fonctions.js";
 var player; // désigne le sprite du joueur
 var clavier; // pour la gestion du clavier
 var groupe_plateformes; // Groupe d'objets pour les plateformes
+var son_regle;
 
 export default class règles extends Phaser.Scene {
     // constructeur de la classe
@@ -12,6 +13,7 @@ export default class règles extends Phaser.Scene {
         });
     }
     preload() {
+        this.load.audio("cotton", "src/assets/cotton.mp3");
         this.load.image("img_regle", "src/assets/règle menu.png");
         this.load.image("img_plateforme", "src/assets/platform.png");
         this.load.spritesheet("img_perso", "src/assets/trump.png", {
@@ -27,6 +29,15 @@ export default class règles extends Phaser.Scene {
 
         // Fond d'écran
         this.add.image(400, 300, "img_regle");
+
+        son_regle = this.sound.add("cotton");
+
+        console.log(this.cache.audio.exists("cotton")); // Vérifie si le son est bien chargé
+        if (this.cache.audio.exists("cotton")) {
+            son_regle.play({ loop: true });
+        } else {
+            console.error("Le fichier audio ne s'est pas chargé correctement !");
+        }
 
         // Plateformes
         this.groupe_plateformes = this.physics.add.staticGroup();
@@ -92,6 +103,7 @@ export default class règles extends Phaser.Scene {
 
         if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
             if (this.physics.overlap(this.player, this.porte2)) {
+                son_regle.stop();
                 this.scene.switch("selection");
             }
         }
