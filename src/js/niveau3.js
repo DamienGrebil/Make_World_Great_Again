@@ -7,10 +7,11 @@ var bossHealthBar;
 var bossHealthText;
 var groupeBullets;
 var bossBullets;
-var playerHealth = 3;
+var playerHealth = 5; // Changed to 5 (Fixed)
 var playerHealthText;
 var bossHealthBarBackground;
 var bossHealthBarTimer;
+var boutonFeu; // New: Variable for the fire button
 
 export default class niveau3 extends Phaser.Scene {
   constructor() {
@@ -24,8 +25,8 @@ export default class niveau3 extends Phaser.Scene {
     this.load.image("img_plateforme_bunker_mini", "src/assets/platform_bunker_mini.png");
     this.load.image("img_perso", "src/assets/perso.png");
     this.load.image("bullet", "src/assets/sombrero.png");
-    this.load.image("img_agent_d", "src/assets/agent_d.png");
-    this.load.image("bossBullet", "src/assets/agentBullet.png");
+    this.load.image("Manu_macron", "src/assets/MAnu.png");
+    this.load.image("bossBullet", "src/assets/baguette.png");
   }
 
   create() {
@@ -52,14 +53,15 @@ export default class niveau3 extends Phaser.Scene {
     this.player.setCollideWorldBounds(true);
     this.player.direction = "right";
     this.clavier = this.input.keyboard.createCursorKeys();
+    boutonFeu = this.input.keyboard.addKey('A'); // New: Bind the A key to boutonFeu
     this.physics.add.collider(this.player, this.groupe_plateformes_bunker);
 
     // Boss creation
-    boss = this.physics.add.sprite(700, 300, "img_agent_d");
-    boss.setImmovable(true);//set immovable at the creation of the boss (fix)
+    boss = this.physics.add.sprite(700, 300, "Manu_macron");
+    boss.setImmovable(true);
     boss.setCollideWorldBounds(true);
     boss.setBounce(0.3);
-    boss.body.setAllowGravity(false); //set to false (fix)
+    boss.body.setAllowGravity(false);
     this.physics.add.collider(boss, this.groupe_plateformes_bunker);
     boss.health = bossHealth;
     boss.isDead = false;
@@ -74,10 +76,10 @@ export default class niveau3 extends Phaser.Scene {
     bossHealthBar = this.add.rectangle(healthBarX, healthBarY, healthBarWidth, healthBarHeight, 0xff0000);
     bossHealthBarBackground.setOrigin(0.5, 0.5);
     bossHealthBar.setOrigin(0.5, 0.5);
-     bossHealthBarBackground.setScrollFactor(0);
+    bossHealthBarBackground.setScrollFactor(0);
     bossHealthBar.setScrollFactor(0);
-    bossHealthBarBackground.setVisible(false);//the bar is invisible
-    bossHealthBar.setVisible(false);//the bar is invisible
+    bossHealthBarBackground.setVisible(false);
+    bossHealthBar.setVisible(false);
 
     bossHealthText = this.add.text(healthBarX, healthBarY, "Boss Health: " + boss.health, {
       fontSize: "20px",
@@ -88,10 +90,10 @@ export default class niveau3 extends Phaser.Scene {
     });
     bossHealthText.setOrigin(0.5, 0.5);
     bossHealthText.setScrollFactor(0);
-    bossHealthText.setVisible(false); //hide the text
+    bossHealthText.setVisible(false);
 
     // Player health text
-    playerHealthText = this.add.text(16, 40, "Player Health: " + playerHealth, {
+    playerHealthText = this.add.text(16, 40, "Player Health: " + playerHealth, { //use the new playerHealth (Fixed)
       fontSize: "20px",
       fill: "#ffffff",
       fontFamily: "Arial",
@@ -111,23 +113,24 @@ export default class niveau3 extends Phaser.Scene {
 
   hitBoss(boss, bullet) {
     bullet.destroy();
-    boss.health -= 10;
-    bossHealthBarBackground.setVisible(true); //make visible the healthBar (fix)
-    bossHealthBar.setVisible(true);//make visible the healthBar (fix)
-    bossHealthText.setVisible(true);//make visible the healthBar (fix)
+    boss.health -= 5; // Changed to 5 (Fixed)
+    // show the health bar
+    if (!bossHealthBarBackground.visible) { 
+         bossHealthBarBackground.setVisible(true); //make visible the healthBar (fix)
+        bossHealthBar.setVisible(true);//make visible the healthBar (fix)
+        bossHealthText.setVisible(true);//make visible the healthBar (fix)
+    }
+
     let healthPercentage = boss.health / bossHealth;
     bossHealthBar.width = 300 * healthPercentage;
     bossHealthText.setText("Boss Health: " + boss.health);
     if (boss.health <= 0) this.bossDeath(boss);
-        // Handle health bar fade-out
+
+  // Remove the timer logic
         if (bossHealthBarTimer) {
-            bossHealthBarTimer.remove(); // reset timer
+            bossHealthBarTimer.remove();
+             bossHealthBarTimer=null;
         }
-    bossHealthBarTimer = this.time.delayedCall(2000, () => { // 2 secondes
-            bossHealthBarBackground.setVisible(false);
-            bossHealthBar.setVisible(false);
-            bossHealthText.setVisible(false);
-        });
   }
 // New Function for player hit by boss
   playerHitByBossBullet(player, bullet) {
@@ -136,8 +139,8 @@ export default class niveau3 extends Phaser.Scene {
     playerHealthText.setText("Player Health: " + playerHealth); // Update player health text
 
     if (playerHealth <= 0) {
-      this.killPlayer();// Call the killPlayer function in this file
-      this.gameOver = true;//set gameOver
+      this.killPlayer();// Call the killPlayer function in this file 
+      this.gameOver = true;//set gameOver 
     }
   }
       // New: Boss's bullet attack
@@ -168,22 +171,25 @@ export default class niveau3 extends Phaser.Scene {
     let bossPhase = 1; // start with phase 1
     // Boss Movement
     this.time.addEvent({
-      delay: 2000,
+      delay: 2000, // how often the boss check the position of the player
       callback: () => {
         if (!boss.isDead) {
-          if (bossPhase === 1) {
-            // Phase 1: Left/Right Movement
-            if (boss.body.velocity.x > 0) {
-              boss.setVelocityX(-100);
-              boss.flipX = true; // flip the sprite
-              boss.direction = "left";
-            } else {
-              boss.setVelocityX(100);
-              boss.flipX = false;
-              boss.direction = "right";
-            }
-             boss.setImmovable(true); // set the boss to immovable AFTER changing direction (Fixed)
-          } else if (bossPhase === 2) {
+          //Calculate the dist between the boss and the player
+            let distance = Phaser.Math.Distance.Between(boss.x, boss.y, this.player.x, this.player.y);
+          //Move to the player
+            if (distance > 100) { // check the distance between the player and the boss
+              if (this.player.x < boss.x) {
+                boss.direction = "left"
+                boss.setVelocityX(-100);
+                boss.flipX = true; // flip the sprite
+              } else {
+                 boss.direction = "right"
+                boss.setVelocityX(100);
+                boss.flipX = false;
+              }
+              boss.setImmovable(true); // set the boss to immovable when it move
+           }
+           if (bossPhase === 2) {
             // Phase 2: Jumping and shooting
              boss.setImmovable(false); // set the boss to movable BEFORE jumping
 
@@ -196,9 +202,10 @@ export default class niveau3 extends Phaser.Scene {
               boss.direction = "left"
               boss.flipX = true;
             }
-            //Shoot
-            this.bossShoot(boss);
-          }
+           }
+           if(distance < 100){
+             boss.setVelocityX(0);
+           }
         }
       },
       loop: true,
@@ -244,23 +251,31 @@ export default class niveau3 extends Phaser.Scene {
     }
 
   update() {
+     if (Phaser.Input.Keyboard.JustDown(boutonFeu)) { // Changed to boutonFeu
+      this.tirer(this.player);
+    }
+
     if (this.clavier.left.isDown) {
       this.player.setVelocityX(-160);
+      this.player.anims.play("anim_tourne_gauche", true);
       this.player.direction = "left";
+
     } else if (this.clavier.right.isDown) {
       this.player.setVelocityX(160);
+      this.player.anims.play("anim_tourne_droite", true);
       this.player.direction = "right";
+
     } else {
       this.player.setVelocityX(0);
+      this.player.anims.play("anim_face");
     }
     if (this.clavier.up.isDown && this.player.body.touching.down) {
       this.player.setVelocityY(-330);
     }
-    if (Phaser.Input.Keyboard.JustDown(this.clavier.space)) {
-      if (this.physics.overlap(this.player, this.porte_retour)) {
-        this.scene.switch("niveau2");
-      }
-      this.tirer(this.player)
+
+    if (this.clavier.down.isDown) {
+      this.player.setVelocityY(260);
+      this.player.anims.play("anim_face");
     }
         if(this.gameOver){
             return;
