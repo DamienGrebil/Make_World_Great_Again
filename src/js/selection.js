@@ -59,6 +59,7 @@ export default class selection extends Phaser.Scene {
     this.load.image("bullet", "src/assets/balle.png");
     this.load.image("cible_d", "src/assets/bouton_d.png");
     this.load.image("cible_g", "src/assets/bouton_g.png");
+    this.load.image("img_victoire", "src/assets/VICTOIRE.png");
   }
 
   /***********************************************************************/
