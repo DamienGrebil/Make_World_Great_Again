@@ -11,14 +11,10 @@ export default class minijeu extends Phaser.Scene {
 }
 
   create() {
-    let image0 = this.add.image(800, 640, "img_num");
-    // ajout d'un texte distintcif  du niveau
-    this.add.text(400, 100, "Ouvrez la porte du Bunker", {
-      fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
-      fontSize: "22pt"
-    });
+    let image0 = this.add.image(400, 300, "img_num");
+    
 
-let playButton = this.add.image(550, 320, "bouton_49.3").setInteractive();
+let playButton = this.add.image(600, 300, "bouton_49.3").setInteractive();
     playButton.on("pointerdown", () => {
       console.log("minijeu : retour vers niv2");
       this.scene.switch("niveau2");

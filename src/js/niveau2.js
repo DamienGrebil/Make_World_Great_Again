@@ -134,10 +134,9 @@ export default class niveau2 extends Phaser.Scene {
         console.log("niveau 3 : passage au niveau 3");
         this.scene.switch("niveau3");
       }
-      if (this.physics.overlap(this.player, this.cabine)) {
-        console.log("mini defi : passage au defi");
-        this.scene.switch("minijeu");
-      }
+      if (this.physics.overlap(this.player, this.cabine)) 
+        this.scene.start("minijeu");
+      
     }
   }
 
