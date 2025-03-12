@@ -211,16 +211,20 @@ export default class niveau3 extends Phaser.Scene {
         bossBullet.body.onWorldBounds = true;
         }
     }
-    bossDeath(boss) {
-      boss.isDead = true;
-      boss.setVelocity(0, 0);
-      boss.destroy();
-      bossHealthBar.destroy();
-      bossHealthBarBackground.destroy();
-      bossHealthText.destroy();
-      this.scene.start("victoire")//Call the victoire scene
-  
-    }
+  bossDeath(boss) {
+    boss.isDead = true;
+    boss.setVelocity(0, 0);
+    boss.destroy();
+    bossHealthBar.destroy();
+    bossHealthBarBackground.destroy();
+    bossHealthText.destroy();
+    this.add.text(300, 200, "Vous avez vaincu le Boss", {
+      fontFamily: 'Georgia, "Goudy Bookletter 1911", Times, serif',
+      fontSize: "30pt",
+      fill: "#ffffff",
+    });
+    this.cameras.main.shake(500, 0.05);
+  }
   bossPattern(boss) {
     let bossPhase = 1; // start with phase 1
     // Boss Movement
