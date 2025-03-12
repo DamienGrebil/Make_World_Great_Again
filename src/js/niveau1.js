@@ -26,8 +26,8 @@ export default class niveau1 extends Phaser.Scene {
     this.load.image("img_bombe", "src/assets/bombe.png"); // Chargement de l'image de la bombe
     cursors = this.input.keyboard.createCursorKeys(); // Création de l'objet pour les touches directionnelles
     boutonFeu = this.input.keyboard.addKey('A'); // Création de l'objet pour la touche 'A' (tir)
-    this.load.image("bullet", "src/assets/balle.png"); // Chargement de l'image de la balle du joueur
-    this.load.image("agentBullet", "src/assets/balle_ennemi.png"); // Chargement de l'image de la balle des agents
+    this.load.image("bullet", "src/assets/sombrero.png"); // Chargement de l'image de la balle du joueur
+    this.load.image("agentBullet", "src/assets/agentBullet.png"); // Chargement de l'image de la balle des agents
     this.load.image("cible", "src/assets/bouton.png", { frameWidth: 100, frameHeight: 32 }); // Chargement de l'image du bouton non appuyé
     this.load.image("cible_d", "src/assets/cible_d.png"); // Chargement de l'image du bouton droite (non appuyé)
     this.load.image("cible_g", "src/assets/cible_g.png"); // Chargement de l'image du bouton gauche (non appuyé)
