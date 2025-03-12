@@ -9,6 +9,7 @@ var cursors;
 var groupeBullets;
 var groupeAgentBullets; // New group for agent bullets
 var agents; // New group for agents
+var groupeCibles;
 
 export default class niveau1 extends Phaser.Scene {
   // constructeur de la classe
@@ -24,6 +25,8 @@ export default class niveau1 extends Phaser.Scene {
     this.load.image("bullet", "src/assets/balle.png");
     this.load.image("agentBullet", "src/assets/balle_ennemi.png"); // New bullet for agents
     this.load.image("cible", "src/assets/bouton.png", { frameWidth: 100, frameHeight: 32 });
+    this.load.image("cible_d", "src/assets/cible_d.png");
+    this.load.image("cible_g", "src/assets/cible_g.png");
   }
 
   create() {
@@ -59,14 +62,7 @@ export default class niveau1 extends Phaser.Scene {
     this.groupe_plateformes.create(420, 125, "img_plateforme_mini");
 
 
-    this.groupe_plateformes.create(-13, 240, "cible_g");
-    this.groupe_plateformes.create(811, 330, "cible_d");
-
-
-
-
-
-
+    
 
     // ajout d'un texte distintcif  du niveau
     this.add.text(600, 30, "White House", {
@@ -98,10 +94,17 @@ export default class niveau1 extends Phaser.Scene {
         objet.destroy();
       }
     });
-    this.add.image(100, 245, "img_agent_d");
-    this.add.image(600, 245, "img_agent_g");
-    this.add.image(50, 335, "img_agent_d");
-    this.add.image(700, 425, "img_agent_g");
+    //Creation of the cible
+    groupeCibles = this.physics.add.group();
+    let cible_g = groupeCibles.create(-13, 240, "cible_g");
+    let cible_d = groupeCibles.create(811, 330, "cible_d");
+    cible_g.cibleActive = false;
+    cible_d.cibleActive = false;
+    cible_d.pointsVie = 1;
+    cible_g.pointsVie = 1;
+    this.physics.add.collider(groupeCibles, this.groupe_plateformes);
+    //add overlap between bullet and cible
+    this.physics.add.overlap(groupeBullets, groupeCibles, hit, null, this);
 
     this.player.direction = "right";
 
@@ -112,11 +115,12 @@ export default class niveau1 extends Phaser.Scene {
     let agent3 = agents.create(50, 335, "img_agent_d");
     let agent4 = agents.create(700, 425, "img_agent_g");
 
-    // Set agents to static
+    // Set agents to static and add life points
     agents.children.iterate(function (agent) {
-    agent.setImmovable(true); // Agents don't move
-    agent.body.allowGravity = false; // Agent are not affect by the gravity
-        
+        agent.setImmovable(true); // Agents don't move
+        agent.body.allowGravity = false; // Agent are not affect by the gravity
+        agent.pointsVie = Phaser.Math.Between(3,4);
+        agent.isDead = false; // New property to track if the agent is dead
     });
 
     //Collision between agents and platforms
@@ -132,7 +136,9 @@ export default class niveau1 extends Phaser.Scene {
        let timer = this.time.addEvent({
             delay: Phaser.Math.Between(2000, 4000), // Random delay between 1 and 3 seconds
             callback: () => {
-                agentTir(agent, this.player, groupeAgentBullets);
+                if (!agent.isDead){
+                  agentTir(agent, this.player, groupeAgentBullets);
+                }
             },
             callbackScope: this,
             loop: true
@@ -152,8 +158,10 @@ export default class niveau1 extends Phaser.Scene {
     this.physics.add.collider(agents, agents);
 
      gameOver = false;
-}  
-  
+
+     //add a collider between the agent and the bullet
+     this.physics.add.overlap(groupeBullets, agents, agentHit, null, this);
+  }
 
   update() {
     // déclenchement de la fonction tirer() si appui sur boutonFeu
@@ -194,13 +202,7 @@ export default class niveau1 extends Phaser.Scene {
     }
 
 
-    if (gameOver) {
-      return; // on sort de la fonction update si gameOver est true
-    }
-
-    if (Phaser.Input.Keyboard.JustDown(boutonFeu)) {
-      tirer(player);
-    }
+    
     //if(gameOver) {
     //  return; // on sort de la fonction update si gameOver est true
     //}
@@ -241,11 +243,31 @@ function agentTir(agent, player, groupeAgentBullets) {
   agentBullet.body.allowGravity = false;
   agentBullet.setVelocity(300 * coefDir, 0);
 }
-
+function agentHit(bullet, agent) {
+    agent.pointsVie--;
+    if (agent.pointsVie <= 0) {
+      agent.isDead = true; // Set the isDead flag
+        agent.destroy();
+    }
+    bullet.destroy();
+}
 function hit(bullet, groupeCibles) {
   groupeCibles.pointsVie--;
-  if (groupeCibles.pointsVie == 0) {
-    groupeCibles.destroy();
+  
+  if (groupeCibles.pointsVie <= 0) {
+      
+      groupeCibles.children.iterate((cible)=>{
+          if (cible.texture.key === "cible_g" && cible.cibleActive === false ) {
+               
+              cible.setTint(0x00ff00);
+              cible.cibleActive=true;
+          }
+          if (cible.texture.key === "cible_d" && cible.cibleActive === false) {
+              cible.setTint(0x00ff00);
+              cible.cibleActive=true;
+          }
+      });
+
   }
   bullet.destroy();
 }
@@ -302,9 +324,9 @@ export function killPlayer(scene) {
   scene.time.delayedCall(3000, () => {
     // Logic for respawning
 
-    if (scene.scene.key === "selection") { 
+    if (scene.scene.key === "selection") {
       scene.scene.restart();
-        scene.gameOver = false; 
+        scene.gameOver = false;
         
     } else {
         
