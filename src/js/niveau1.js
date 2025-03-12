@@ -82,6 +82,8 @@ export default class niveau1 extends Phaser.Scene {
     this.porte2 = this.physics.add.staticSprite(397, 100, "img_porte2"); // Ajout de la porte pour le niveau 2
 
     this.player = this.physics.add.sprite(100, 450, "img_perso"); // Ajout du joueur (sprite)
+    this.player.body.setSize(20, 30, 6, 18); // taille du rectangle de collision
+    this.player.body.setOffset(6, 18); // décalage du rectangle de collision
     this.player.refreshBody(); //Rafraichisement du corp du joueur
     this.player.setBounce(0.1); // Définition du rebond du joueur
     this.player.setCollideWorldBounds(true); // Empêche le joueur de sortir des limites du monde
