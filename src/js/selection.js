@@ -153,29 +153,6 @@ export default class selection extends Phaser.Scene {
 
     //  Collide the player and the groupe_etoiles with the groupe_plateformes
     this.physics.add.collider(player, groupe_plateformes);
-
-    bombe = this.physics.add.group();
-    this.physics.add.collider(bombe, groupe_plateformes);
-    var x;
-    if (player.x < 400) {
-      x = Phaser.Math.Between(400, 800);
-    } else {
-      x = Phaser.Math.Between(0, 400);
-    }
-
-
-    groupeBullets = this.physics.add.group();
-    this.physics.add.overlap(groupeBullets, groupeCibles, hit, null, this);
-    
-    this.physics.world.on("worldbounds", function (body) {
-      // on récupère l'objet surveillé
-      var objet = body.gameObject;
-      // s'il s'agit d'une balle
-      if (groupeBullets.contains(objet)) {
-        // on le détruit
-        objet.destroy();
-      }
-    });
   }
 
   /***********************************************************************/
@@ -183,11 +160,6 @@ export default class selection extends Phaser.Scene {
 /***********************************************************************/
 
   update() {
-    // déclenchement de la fonction tirer() si appui sur boutonFeu 
-    if (Phaser.Input.Keyboard.JustDown(boutonFeu)) {
-      console.log("Tir déclenché !");
-      tirer(player);
-    }
 
     if (clavier.left.isDown) {
       player.direction = 'left';
@@ -217,43 +189,8 @@ export default class selection extends Phaser.Scene {
     if (this.physics.overlap(player, this.regle)) 
         this.scene.start("règles"); 
       
-    
-
-    // déclenchement de la fonction tirer() si appui sur boutonFeu 
-    if (Phaser.Input.Keyboard.JustDown(boutonFeu)) {
-      tirer(player);
-    }
-  
     if(gameOver) {
       return; // on sort de la fonction update si gameOver est true
     }
   }
-}
-
-function chocAvecBombe(un_player, une_bombe) { // fonction appelée lorsqu'une bombe touche le joueur
-  console.log("hit"); //debug 
-  this.physics.pause(); // on met le jeu en pause
-  player.setTint(0xff00ff); // on change la couleur du joueur
-  player.anims.play("anim_face"); // on joue l'animation "anim_face"
-  gameOver = true; // on met la variable gameOver à true
-  killPlayer(this); // on appelle la fonction killPlayer
-}
-
-
-function tirer(player) { // fonction appelée lorsqu'on appuie sur le bouton de tir
-  var coefDir; // coefficient de direction
-  if (player.direction == 'left') { coefDir = -1; } else { coefDir = 1 } // si le joueur regarde à gauche, coefDir = -1, sinon coefDir = 1
-  var bullet = groupeBullets.create(player.x + (25 * coefDir), player.y - 4, 'bullet');   // on crée la balle a coté du joueur
-  // parametres physiques de la balle.
-  bullet.setCollideWorldBounds(true);
-  bullet.body.allowGravity = false;
-  bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
-}
-
-function hit(bullet, groupeCibles) { // fonction appelée lorsqu'une balle touche une cible
-  groupeCibles.pointsVie--;  // on retire un point de vie à la cible
-  if (groupeCibles.pointsVie == 0) { // si la cible n'a plus de points de vie
-    groupeCibles.destroy(); // on la détruit
-  }
-  bullet.destroy(); // on détruit la balle
 }
