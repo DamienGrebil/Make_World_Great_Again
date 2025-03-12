@@ -5,6 +5,7 @@ import niveau2 from "/src/js/niveau2.js";
 import niveau3 from "/src/js/niveau3.js";
 import minijeu from "/src/js/minijeu.js";
 import règles from "/src/js/règles.js";
+import victoire from "/src/js/victoire.js";
 
 // configuration générale du jeu
 var config = {
@@ -27,7 +28,7 @@ var config = {
       debug: true // permet de voir les hitbox et les vecteurs d'acceleration quand mis à true
     }
   },
-  scene: [selection, niveau1, niveau2, niveau3, règles,minijeu]
+  scene: [selection, niveau1, niveau2, niveau3, règles,minijeu,victoire]
 };
 
 // création et lancement du jeu

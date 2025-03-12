@@ -85,53 +85,47 @@ export default class niveau3 extends Phaser.Scene {
     bossBullets = this.physics.add.group();
     this.physics.add.overlap(groupeBullets, boss, this.hitBoss, null, this);
     this.physics.add.overlap(this.player, bossBullets, this.playerHitByBossBullet, null, this);
-    groupe_bombes = this.physics.add.group();
-    this.physics.add.collider(groupe_bombes, this.groupe_plateformes_bunker);
+
+    // Creation des bombes
+    groupe_bombes = this.physics.add.group();//create the group
+    this.physics.add.collider(groupe_bombes, this.groupe_plateformes_bunker); //add the collision between the bomb and the plateforme
     this.resetBombs();
+    //gestion de la collision entre les bombes et le joueur
     this.physics.add.collider(this.player, groupe_bombes, this.chocAvecBombe, null, this);
-    this.bossPattern(boss);
-    this.physics.add.collider(groupe_bombes, this.groupe_plateformes_bunker,this.bombPlatform,null,this);
 
+    this.bossPattern(boss);//call the boss pattern
   }
-    bombPlatform(bomb){
-        if(bomb.body.velocity.x > maxBombSpeed){
-            bomb.setVelocityX(maxBombSpeed);
-        }else if(bomb.body.velocity.x < -maxBombSpeed){
-            bomb.setVelocityX(-maxBombSpeed)
-        }
-
-         if(bomb.body.velocity.y > maxBombSpeed){
-            bomb.setVelocityY(maxBombSpeed);
-        }else if(bomb.body.velocity.y < -maxBombSpeed){
-            bomb.setVelocityY(-maxBombSpeed)
-        }
+  chocAvecBombe(un_player, une_bombe) { // function call when the player hit a bomb
+    //check if the player is not invincible
+    playerHealth -= 1; //remove 1hp at the player
+    playerHealthText.setText("Player Health: " + playerHealth);//update the text of the player health
+    if (playerHealth <= 0) { //if the player have 0 hp or less
+      this.killPlayer();//Call the function killPlayer in this file
     }
-  chocAvecBombe(un_player, une_bombe) {
-    playerHealth -= 1;
-    playerHealthText.setText("Player Health: " + playerHealth);
-    if (playerHealth <= 0) {
-      this.killPlayer();
-    }
-    une_bombe.destroy();
+    une_bombe.destroy();//destoy the bomb
   }
+  //fonction pour reset les bombes
   resetBombs() {
     if (groupe_bombes) {
-      groupe_bombes.clear(true, true);
+      groupe_bombes.clear(true, true); // détruit les bombes existantes
     }
-    for (let i = 0; i < 4; i++) {
-      let x = Phaser.Math.Between(100, 800);
-      let y = Phaser.Math.Between(100, 400);
-      let une_bombe = groupe_bombes.create(x, y, "croissant");
-      une_bombe.setBounce(1,1);
-      une_bombe.setCollideWorldBounds(true);
+
+    for (let i = 0; i < 4; i++) { //create 5 bomb
+      let x = Phaser.Math.Between(100, 800); // Random X position
+      let y = Phaser.Math.Between(100, 400); // random Y position
+
+      let une_bombe = groupe_bombes.create(x, y, "croissant"); //create the bomb with the croissant image
+      une_bombe.setBounce(Phaser.Math.FloatBetween(0.8, 1)); // Add a random bounce
+      une_bombe.setCollideWorldBounds(true); // set the collision with the edge
+
+      //Add random velocity
       let vitesseX = Phaser.Math.Between(-200, 200);
-      let vitesseY = Phaser.Math.Between(-200, 200);
+      let vitesseY = Phaser.Math.Between(100, 130);
       une_bombe.setVelocity(vitesseX, vitesseY);
-      une_bombe.setDamping(true)
-      une_bombe.setDrag(0.5);
-      une_bombe.allowGravity = false;
+      une_bombe.allowGravity = false; // No gravity
     }
   }
+  //Fonction pour reset le boss
   resetBoss() {
     if (boss) {
       boss.destroy();
@@ -142,29 +136,34 @@ export default class niveau3 extends Phaser.Scene {
     boss.setBounce(0.3);
     boss.body.setAllowGravity(false);
     this.physics.add.collider(boss, this.groupe_plateformes_bunker);
-    boss.health = bossHealth;
-    boss.isDead = false;
+    boss.health = bossHealth; // Réinitialiser la santé du boss
+    boss.isDead = false; // Réinitialiser l'état de mort
     boss.direction = "left";
+    // Réinitialiser la barre de vie du boss
     bossHealthBar.width = 300;
     bossHealthText.setText("Boss Health: " + boss.health);
   }
   hitBoss(boss, bullet) {
     bullet.destroy();
-    boss.health -= 5;
+    boss.health -= 5; // Changed to 5 (Fixed)
+    // show the health bar
     if (!bossHealthBarBackground.visible) {
-      bossHealthBarBackground.setVisible(true);
-      bossHealthBar.setVisible(true);
-      bossHealthText.setVisible(true);
+      bossHealthBarBackground.setVisible(true); //make visible the healthBar (fix)
+      bossHealthBar.setVisible(true);//make visible the healthBar (fix)
+      bossHealthText.setVisible(true);//make visible the healthBar (fix)
     }
     let healthPercentage = boss.health / bossHealth;
     bossHealthBar.width = 300 * healthPercentage;
     bossHealthText.setText("Boss Health: " + boss.health);
     if (boss.health <= 0) this.bossDeath(boss);
+
+    // Remove the timer logic
     if (bossHealthBarTimer) {
       bossHealthBarTimer.remove();
       bossHealthBarTimer = null;
     }
   }
+  // New Function for player hit by boss
   playerHitByBossBullet(player, bullet) {
     bullet.destroy();
     playerHealth--;
@@ -174,6 +173,7 @@ export default class niveau3 extends Phaser.Scene {
       this.gameOver = true;
     }
   }
+  // New: Boss's bullet attack
   bossShoot(boss) {
     if (!boss.isDead) {
       let bossBullet = bossBullets.create(boss.x, boss.y, "bossBullet");
@@ -186,36 +186,41 @@ export default class niveau3 extends Phaser.Scene {
   bossDeath(boss) {
     boss.isDead = true;
     boss.setVelocity(0, 0);
-     this.time.delayedCall(1000, () => { // Wait 1 second
-       boss.destroy();
-       bossHealthBar.destroy();
-       bossHealthBarBackground.destroy();
-       bossHealthText.destroy();
-       this.scene.start("victoire");//change to the scene
-    });
+    boss.destroy();
+    bossHealthBar.destroy();
+    bossHealthBarBackground.destroy();
+    bossHealthText.destroy();
+    this.cameras.main.shake(500, 0.05);
+    this.scene.switch("victoire");
   }
+  
   bossPattern(boss) {
     let bossPhase = 1;
     this.time.addEvent({
       delay: 2000,
       callback: () => {
         if (!boss.isDead) {
+          //Calculate the dist between the boss and the player
           let distance = Phaser.Math.Distance.Between(boss.x, boss.y, this.player.x, this.player.y);
-          if (distance > 100) {
+          //Move to the player
+          if (distance > 100) { // check the distance between the player and the boss
             if (this.player.x < boss.x) {
               boss.direction = "left"
               boss.setVelocityX(-100);
-              boss.flipX = true;
+              boss.flipX = true; // flip the sprite
             } else {
               boss.direction = "right"
               boss.setVelocityX(100);
               boss.flipX = false;
             }
-            boss.setImmovable(true);
+            boss.setImmovable(true); // set the boss to immovable when it move
           }
           if (bossPhase === 2) {
-            boss.setImmovable(false);
-            boss.setVelocityY(-200);
+            // Phase 2: Jumping and shooting
+            boss.setImmovable(false); // set the boss to movable BEFORE jumping
+
+            boss.setVelocityY(-200); // Make the boss jump
+            //Check the previous velocity
             if (boss.body.velocity.x > 0) {
               boss.direction = "right"
               boss.flipX = false;
@@ -241,10 +246,10 @@ export default class niveau3 extends Phaser.Scene {
       delay: 5000,
       callback: () => {
         if (!boss.isDead) {
-          if (boss.x < 200 || boss.x > 800) {
+          if (boss.x < 200 || boss.x > 800) { // if boss on the side of the map, the phase change
             bossPhase = 2;
           } else {
-            bossPhase = bossPhase === 1 ? 2 : 1;
+            bossPhase = bossPhase === 1 ? 2 : 1; // Switch between phase 1 and phase 2
           }
         }
       },
@@ -259,25 +264,27 @@ export default class niveau3 extends Phaser.Scene {
       loop: true
     });
   }
+  // Fonction appelée lorsqu'un joueur doit mourir
   killPlayer() {
-    if (this.player) {
-      this.player.setTint(0xff0000);
-      this.player.setVelocity(0, 0);
-      this.player.anims.stop();
+    console.log("Le joueur est mort !"); // Affichage dans la console
+    if (this.player) { // Vérifie si le joueur existe
+      this.player.setTint(0xff0000); // Met une teinte rouge sur le joueur
+      this.player.setVelocity(0, 0); // Arrête la vitesse du joueur
+      this.player.anims.stop(); // Arrête l'animation du joueur
     }
-    playerHealth = 5;
+    playerHealth = 5;//reset the player health
     playerHealthText.setText("Player Health: " + playerHealth);
-    this.physics.pause();
-    this.time.delayedCall(3000, () => {
-      this.resetBoss();
-      this.resetBombs();
-      this.scene.start("niveau2");
-      this.physics.resume();
-      this.gameOver = false;
+    this.physics.pause(); // Met la physique du jeu en pause (pour éviter d'autres collisions)
+    this.time.delayedCall(3000, () => { // Attend 3 secondes (3000 millisecondes) avant de relancer le jeu
+      this.resetBoss();//reset the boss
+      this.resetBombs();//reset the bombs
+      this.scene.start("niveau2"); // Redémarre la scène 2
+      this.physics.resume(); // Relance la physique du jeu
+      this.gameOver = false;//reset gameOver
     });
   }
   update() {
-    if (Phaser.Input.Keyboard.JustDown(boutonFeu)) {
+    if (Phaser.Input.Keyboard.JustDown(boutonFeu)) { // Changed to boutonFeu
       this.tirer(this.player);
     }
     if (this.clavier.left.isDown) {
@@ -302,13 +309,19 @@ export default class niveau3 extends Phaser.Scene {
     if (this.gameOver) {
       return;
     }
+    if (this.gameOver) {
+      return;
+    }
   }
+  // Fonction pour le tir du joueur
   tirer(player) {
-    var coefDir;
-    if (player.direction == "left") { coefDir = -1; } else { coefDir = 1 }
+    var coefDir; // Variable pour la direction du tir
+    if (player.direction == "left") { coefDir = -1; } else { coefDir = 1 } // Si la direction du joueur est gauche, alors coefDir = -1, sinon coefDir = 1
+    // Création de la balle a coté du joueur
     var bullet = groupeBullets.create(player.x + (25 * coefDir), player.y - 4, 'bullet');
-    bullet.setCollideWorldBounds(false);
-    bullet.body.allowGravity = false;
-    bullet.setVelocity(1000 * coefDir, 0);
+    // Paramètres physiques de la balle
+    bullet.setCollideWorldBounds(false); // La balle ne peut pas sortir des limites du monde
+    bullet.body.allowGravity = false; // La balle n'est pas affectée par la gravité
+    bullet.setVelocity(1000 * coefDir, 0); // Vitesse de la balle (vers la gauche ou la droite)
   }
 }
