@@ -26,8 +26,8 @@ export default class niveau1 extends Phaser.Scene {
     this.groupe_plateformes = this.physics.add.staticGroup();
     this.groupe_plateformes.create(200, 584, "img_plateforme_b");
     this.groupe_plateformes.create(600, 584, "img_plateforme_b");
-    
-    
+
+
     this.groupe_plateformes.create(140, 460, "img_plateforme_be");
     this.groupe_plateformes.create(640, 460, "img_plateforme_be");
     this.groupe_plateformes.create(0, 370, "img_plateforme_be");
@@ -45,7 +45,7 @@ export default class niveau1 extends Phaser.Scene {
     this.groupe_plateformes.create(340, 500, "img_plateforme_mini");
     this.groupe_plateformes.create(340, 505, "img_plateforme_mini");
     this.groupe_plateformes.create(395, 350, "img_plateforme_mini");
-    this.groupe_plateformes.create(395, 355, "img_plateforme_mini"); 
+    this.groupe_plateformes.create(395, 355, "img_plateforme_mini");
     this.groupe_plateformes.create(395, 130, "img_plateforme_mini");
     this.groupe_plateformes.create(395, 125, "img_plateforme_mini");
     this.groupe_plateformes.create(370, 130, "img_plateforme_mini");
@@ -56,10 +56,10 @@ export default class niveau1 extends Phaser.Scene {
 
     this.groupe_plateformes.create(-13, 240, "cible_g");
     this.groupe_plateformes.create(811, 330, "cible_d");
-    
-  
-  
-  
+
+
+
+
 
 
 
@@ -93,26 +93,30 @@ export default class niveau1 extends Phaser.Scene {
         objet.destroy();
       }
     });
-    this.add.image(100, 245, "img_agent_d"); 
-    this.add.image(600, 245, "img_agent_g"); 
-    this.add.image(50, 335, "img_agent_d"); 
-    this.add.image(700, 425, "img_agent_g"); 
+    this.add.image(100, 245, "img_agent_d");
+    this.add.image(600, 245, "img_agent_g");
+    this.add.image(50, 335, "img_agent_d");
+    this.add.image(700, 425, "img_agent_g");
 
+    this.player.direction = "right";
   }
 
   update() {
     // déclenchement de la fonction tirer() si appui sur boutonFeu 
     if (Phaser.Input.Keyboard.JustDown(boutonFeu)) {
-      console.log("Tir déclenché !");
-      tirer(player);
+      tirer(this.player);
     }
 
     if (this.clavier.left.isDown) {
       this.player.setVelocityX(-160);
       this.player.anims.play("anim_tourne_gauche", true);
+      this.player.direction = "left";
+
     } else if (this.clavier.right.isDown) {
       this.player.setVelocityX(160);
       this.player.anims.play("anim_tourne_droite", true);
+      this.player.direction = "right";
+
     } else {
       this.player.setVelocityX(0);
       this.player.anims.play("anim_face");
@@ -135,92 +139,90 @@ export default class niveau1 extends Phaser.Scene {
       }
     }
 
-    if (Phaser.Input.Keyboard.JustDown(boutonFeu)) {
-      tirer(player);
-    }
-  
-    if(gameOver) {
+
+    if (gameOver) {
       return; // on sort de la fonction update si gameOver est true
     }
-  
-  
+
+
   }
 }
 function tirer(player) {
-    var coefDir;
-    if (player.direction == 'left') { coefDir = -1; } else { coefDir = 1 }
-    // on crée la balle a coté du joueur
-    var bullet = groupeBullets.create(player.x + (25 * coefDir), player.y - 4, 'bullet');
-    // parametres physiques de la balle.
-    bullet.setCollideWorldBounds(true);
-    bullet.body.allowGravity = false;
-    bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
-  }
+  var coefDir;
+  if (player.direction == "left") { coefDir = -1; } else { coefDir = 1 }
+  // on crée la balle a coté du joueur
+  var bullet = groupeBullets.create(player.x + (25 * coefDir), player.y - 4, 'bullet');
+  // parametres physiques de la balle.
+  bullet.setCollideWorldBounds(true);
+  bullet.body.allowGravity = false;
+  bullet.setVelocity(1000 * coefDir, 0); // vitesse en x et en y
+}
 
 
 
 function hit(bullet, groupeCibles) {
-    groupeCibles.pointsVie--;
-    if (groupeCibles.pointsVie == 0) {
-      groupeCibles.destroy();
-    }
-    bullet.destroy();
+  groupeCibles.pointsVie--;
+  if (groupeCibles.pointsVie == 0) {
+    groupeCibles.destroy();
   }
+  bullet.destroy();
+}
+
 export function startCountdown(scene) {
-    scene.timeLeft = 10 * 60; // 10 minutes en secondes
-    scene.timerText = scene.add.text(195, 0, "Temps restant: 10:00", {
-        fontSize: "20px",
-        fill: "#ffffff",
-        fontFamily: "Arial",
-        backgroundColor: "#000000",
-        padding: { x: 10, y: 5 }
-    }).setOrigin(1, 0);
+  scene.timeLeft = 10 * 60; // 10 minutes en secondes
+  scene.timerText = scene.add.text(195, 0, "Temps restant: 10:00", {
+    fontSize: "20px",
+    fill: "#ffffff",
+    fontFamily: "Arial",
+    backgroundColor: "#000000",
+    padding: { x: 10, y: 5 }
+  }).setOrigin(1, 0);
 
-    // Met le texte en haut à droite de l'écran en suivant la caméra
-    scene.timerText.setScrollFactor(0); // Fixe le texte sur l'écran
+  // Met le texte en haut à droite de l'écran en suivant la caméra
+  scene.timerText.setScrollFactor(0); // Fixe le texte sur l'écran
 
-    console.log("Texte du timer ajouté !");
+  console.log("Texte du timer ajouté !");
 
-    scene.time.addEvent({ // Ajout d'un événement qui se répète toutes les secondes
-        delay: 1000, // 1000 ms = 1 seconde
-        callback: () => {  
-            scene.timeLeft--;
-            let minutes = Math.floor(scene.timeLeft / 60);
-            let seconds = scene.timeLeft % 60;
-            scene.timerText.setText(`Temps restant: ${minutes}:${seconds.toString().padStart(2, '0')}`);
-            console.log(scene.timeLeft);
+  scene.time.addEvent({ // Ajout d'un événement qui se répète toutes les secondes
+    delay: 1000, // 1000 ms = 1 seconde
+    callback: () => {
+      scene.timeLeft--;
+      let minutes = Math.floor(scene.timeLeft / 60);
+      let seconds = scene.timeLeft % 60;
+      scene.timerText.setText(`Temps restant: ${minutes}:${seconds.toString().padStart(2, '0')}`);
+      console.log(scene.timeLeft);
 
-            if (scene.timeLeft <= 0) {
-                killPlayer(scene);
-            }
-        },
-        loop: true
-    });
+      if (scene.timeLeft <= 0) {
+        killPlayer(scene);
+      }
+    },
+    loop: true
+  });
 }
 export function updateTimerPosition(scene) {
-    // Met à jour la position du timer pour qu'il soit toujours en haut à droite de l'écran
-    scene.timerText.x = scene.cameras.main.scrollX + scene.cameras.main.width - 160; // Décalage à droite
-    scene.timerText.y = scene.cameras.main.scrollY + 20; // Décalage en haut
+  // Met à jour la position du timer pour qu'il soit toujours en haut à droite de l'écran
+  scene.timerText.x = scene.cameras.main.scrollX + scene.cameras.main.width - 160; // Décalage à droite
+  scene.timerText.y = scene.cameras.main.scrollY + 20; // Décalage en haut
 }
 export function killPlayer(scene) {
-    console.log("Le joueur est mort !");
-    if (scene.player) { // Check if player exists
-        scene.player.setTint(0xff0000);
-        scene.player.setVelocity(0, 0);
-        scene.player.anims.stop();
+  console.log("Le joueur est mort !");
+  if (scene.player) { // Check if player exists
+    scene.player.setTint(0xff0000);
+    scene.player.setVelocity(0, 0);
+    scene.player.anims.stop();
+  }
+  scene.physics.pause(); // Pause physics to prevent further collisions
+
+  scene.time.delayedCall(3000, () => {
+    // Logic for respawning
+
+    if (scene.scene.key === "selection") {
+      scene.scene.restart();
+      scene.gameOver = false;
+    } else {
+      scene.scene.start(scene.scene.key);
     }
-    scene.physics.pause(); // Pause physics to prevent further collisions
-    
-    scene.time.delayedCall(3000, () => {
-        // Logic for respawning
-        
-        if (scene.scene.key === "selection"){
-            scene.scene.restart();
-            scene.gameOver = false;
-        }else{
-            scene.scene.start(scene.scene.key);
-        }
-        
-        scene.physics.resume();// Resumes the physics simulation
-    });
+
+    scene.physics.resume();// Resumes the physics simulation
+  });
 }
