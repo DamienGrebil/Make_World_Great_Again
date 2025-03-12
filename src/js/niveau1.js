@@ -13,6 +13,7 @@ var groupeAgentBullets; // New group for agent bullets
 var agents; // New group for agents
 var groupeCibles; // Groupe d'objets pour les cibles (boutons)
 var bothButtonsPressed = false; // Variable pour savoir si les deux boutons sont activés
+var son_niveau1;
 
 
 export default class niveau1 extends Phaser.Scene {
@@ -23,6 +24,7 @@ export default class niveau1 extends Phaser.Scene {
     });
   }
   preload() {
+    this.load.audio("mission", "src/assets/mission.mp3");
     this.load.image("img_bombe", "src/assets/bombe.png"); // Chargement de l'image de la bombe
     cursors = this.input.keyboard.createCursorKeys(); // Création de l'objet pour les touches directionnelles
     boutonFeu = this.input.keyboard.addKey('A'); // Création de l'objet pour la touche 'A' (tir)
@@ -68,7 +70,14 @@ export default class niveau1 extends Phaser.Scene {
 
     
 
+    son_niveau1 = this.sound.add("mission");
 
+    console.log(this.cache.audio.exists("mission")); // Vérifie si le son est bien chargé
+    if (this.cache.audio.exists("mission")) {
+      son_niveau1.play({ loop: true });
+    } else {
+      console.error("Le fichier audio ne s'est pas chargé correctement !");
+    }
 
 
     // ajout d'un texte distintcif  du niveau
@@ -197,10 +206,12 @@ export default class niveau1 extends Phaser.Scene {
 
     if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
       if (this.physics.overlap(this.player, this.porte_retour)) {
+        son_niveau1.stop();
         this.scene.switch("selection");
       }
       if (this.physics.overlap(this.player, this.porte2)) {
         if(bothButtonsPressed){
+          son_niveau1.stop();
           this.scene.switch("niveau2");
         }
       }

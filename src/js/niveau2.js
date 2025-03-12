@@ -7,6 +7,7 @@ var invincible = true; // New variable for invincibility
 var playerHealth = 1; // Initialize player's health
 var playerHealthText; // New variable for the player's health text
 var hasInteractedWithCabine = false; // New variable to track interaction with the cabine
+var son_niveau2;
 
 export default class niveau2 extends Phaser.Scene {
   constructor() {
@@ -16,6 +17,7 @@ export default class niveau2 extends Phaser.Scene {
     this.level2Completed = false;
   }
   preload() {
+    this.load.audio("fort", "src/assets/fort.mp3");
     this.load.image("Phaser_tuile_de_jeu_v0", "src/assets/pixil-frame-0 (3).png");
     this.load.tilemapTiledJSON("carte", "src/assets/mapNiv2.json");
     this.load.image("img_porte1", "src/assets/porte1.png");
@@ -27,7 +29,16 @@ export default class niveau2 extends Phaser.Scene {
   }
 
   create() {
-        this.hasInteractedWithCabine = false; //reset the variable
+
+    son_niveau2 = this.sound.add("fort");
+
+    console.log(this.cache.audio.exists("fort")); // Vérifie si le son est bien chargé
+    if (this.cache.audio.exists("fort")) {
+      son_niveau2.play({ loop: true });
+    } else {
+      console.error("Le fichier audio ne s'est pas chargé correctement !");
+    }
+    this.hasInteractedWithCabine = false; //reset the variable
     this.playerHealth = 5;
     groupe_plateformes = this.physics.add.staticGroup();
 
@@ -72,10 +83,10 @@ export default class niveau2 extends Phaser.Scene {
     this.groupe_plateformes = this.physics.add.staticGroup();
     this.physics.add.collider(this.player, this.groupe_plateformes)
     this.groupe_plateformes.create(2400, 150, "img_plateforme_be");
-    
 
 
-  
+
+
     groupe_bombes = this.physics.add.group();
     this.physics.add.collider(groupe_bombes, calque_plateformes);
     for (let i = 0; i < 20; i++) {
@@ -119,31 +130,34 @@ export default class niveau2 extends Phaser.Scene {
 
     if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
       if (this.physics.overlap(this.player, this.porte_retour)) {
+        son_niveau2.stop();
         console.log("niveau 3 : retour vers selection");
         this.scene.switch("selection");
       }
       if (this.physics.overlap(this.player, this.porte3) && hasInteractedWithCabine) { // Add condition to check if player has interacted with the cabine
+        son_niveau2.stop();
         console.log("niveau 3 : passage au niveau 3");
         this.scene.switch("niveau3");
       }
       if (this.physics.overlap(this.player, this.cabine)) {
+        son_niveau2.stop();
         console.log("mini defi : passage au defi");
         this.scene.switch("minijeu");
-         hasInteractedWithCabine = true; // Set the variable to true when the player interacts with the cabine
+        hasInteractedWithCabine = true; // Set the variable to true when the player interacts with the cabine
       }
     }
   }
 
   chocAvecBombe(un_player, une_bombe) {
-    if (!invincible){
-      playerHealth -=2; //enleve 2PV au joueur
+    if (!invincible) {
+      playerHealth -= 2; //enleve 2PV au joueur
       playerHealthText.setText("Player Health: " + playerHealth);//update le texte du player Health
-      if(playerHealth <= 0){ //si le player a 0PV ou moins
-          this.physics.pause(); //mettre le jeu en pause
-          this.player.setTint(0xff0000); //changer la couleur du joueur
-          this.player.anims.play("anim_face"); //lancer l'animation du joueur
-          gameOver = true; //mettre game over a true
-          fct.killPlayer(this);//appeler la fonction kill player qui est dans fonction.js
+      if (playerHealth <= 0) { //si le player a 0PV ou moins
+        this.physics.pause(); //mettre le jeu en pause
+        this.player.setTint(0xff0000); //changer la couleur du joueur
+        this.player.anims.play("anim_face"); //lancer l'animation du joueur
+        gameOver = true; //mettre game over a true
+        fct.killPlayer(this);//appeler la fonction kill player qui est dans fonction.js
       }
       une_bombe.destroy();
     }
