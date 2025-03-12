@@ -1,6 +1,7 @@
 import * as fct from "/src/js/fonctions.js";
-var groupe_bombes; 
+var groupe_bombes;
 var gameOver = false;
+var groupe_plateformes;
 export default class niveau2 extends Phaser.Scene {
   // constructeur de la classe
   constructor() {
@@ -10,7 +11,6 @@ export default class niveau2 extends Phaser.Scene {
   }
   preload() {
     this.load.image("Phaser_tuile_de_jeu_v0", "src/assets/pixil-frame-0 (3).png");
-
     // chargement de la carte
     this.load.tilemapTiledJSON("carte", "src/assets/mapNiv2.json");
     this.load.image("img_porte1", "src/assets/porte1.png");
@@ -18,43 +18,42 @@ export default class niveau2 extends Phaser.Scene {
     this.load.image("img_perso", "src/assets/perso.png");
     this.load.image("img_bombe", "src/assets/bombe.png")
     this.load.image("img_cabine", "src/assets/cabine.png")
+    this.load.image("img_plateforme_b", "src/assets/platform_b.png");
   }
 
-
   create() {
+
+    groupe_plateformes = this.physics.add.staticGroup();
+
     // chargement de la carte
     const carteDuNiveau = this.add.tilemap("carte");
-
     // chargement du jeu de tuiles
     const tileset = carteDuNiveau.addTilesetImage(
-          "tuile_de_jeuv0",
-          "Phaser_tuile_de_jeu_v0"
-        ); 
+      "tuile_de_jeuv0",
+      "Phaser_tuile_de_jeu_v0"
+    );
     // chargement du calque calque_background
     const calque_background = carteDuNiveau.createLayer(
-          "background",
-          tileset
-        );
-
+      "background",
+      tileset
+    );
     // chargement du calque calque_background_2
     const calque_background_2 = carteDuNiveau.createLayer(
-          "background2",
-          tileset
-      );
-    
-      // chargement du calque calque_plateformes
-  const calque_plateformes = carteDuNiveau.createLayer(
-          "plateformes",
-        tileset
+      "background2",
+      tileset
     );
-    calque_plateformes.setCollisionByProperty({estSolide: true }); 
-
+    // chargement du calque calque_plateformes
+    const calque_plateformes = carteDuNiveau.createLayer(
+      "plateformes",
+      tileset
+    );
+    calque_plateformes.setCollisionByProperty({ estSolide: true });
     // redimentionnement du monde avec les dimensions calculées via tiled
     this.physics.world.setBounds(0, 0, 3200, 640);
     //  ajout du champs de la caméra de taille identique à celle du monde
     this.cameras.main.setBounds(0, 0, 3200, 640);
     // ancrage de la caméra sur le joueur
-    this.porte_retour = this.physics.add.staticSprite(100, 525, "img_cabine");
+    this.porte_retour = this.physics.add.staticSprite(100, 525, "img_porte2");
     this.porte3 = this.physics.add.staticSprite(3150, 525, "img_porte3");
     this.player = this.physics.add.sprite(100, 450, "img_perso");
     this.player.refreshBody();
@@ -63,28 +62,31 @@ export default class niveau2 extends Phaser.Scene {
     this.physics.add.collider(this.player, calque_plateformes);
     this.cameras.main.startFollow(this.player);
     this.clavier = this.input.keyboard.createCursorKeys();
+    this.groupe_plateformes = this.physics.add.staticGroup();
+    this.groupe_plateformes.create(2400, 150, "img_plateforme_be");
+    this.cabine = this.physics.add.staticSprite(2400, 115, "img_cabine");
 
-    groupe_bombes = this.physics.add.group(); 
+    groupe_bombes = this.physics.add.group();
     this.physics.add.collider(groupe_bombes, calque_plateformes);
     for (let i = 0; i < 20; i++) { // Modifier le 5 pour changer le nombre de bombes
       let x = Phaser.Math.Between(50, 3000); // Position X aléatoire
       let y = Phaser.Math.Between(100, 130); // Position Y aléatoire (hauteur aléatoire)
-      
+
       let une_bombe = groupe_bombes.create(x, y, "img_bombe");
-  
+
       une_bombe.setBounce(Phaser.Math.FloatBetween(1, 1)); // Rebond aléatoire entre 0.6 et 1
       une_bombe.setCollideWorldBounds(true);
-      
+
       let vitesseX = Phaser.Math.Between(-200, 200); // Vitesse X aléatoire
       let vitesseY = Phaser.Math.Between(100, 130);  // Vitesse Y aléatoire pour des rebonds différents
-      
+
       une_bombe.setVelocity(vitesseX, vitesseY);
       une_bombe.allowGravity = false;
-  }
-  
-  // Gestion de la collision entre le joueur et les bombes
-  this.physics.add.collider(this.player, groupe_bombes, chocAvecBombe, null, this);
     }
+
+    // Gestion de la collision entre le joueur et les bombes
+    this.physics.add.collider(this.player, groupe_bombes, chocAvecBombe, null, this);
+  }
 
   update() {
     if (this.clavier.left.isDown) {
@@ -100,12 +102,12 @@ export default class niveau2 extends Phaser.Scene {
     if (this.clavier.up.isDown && this.player.body.blocked.down) {
       this.player.setVelocityY(-325);
     }
-    
+
     if (this.clavier.down.isDown) {
       this.player.setVelocityY(260);
       this.player.anims.play("anim_face");
     }
-    
+
     if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
       if (this.physics.overlap(this.player, this.porte_retour)) {
         console.log("niveau 3 : retour vers selection");
@@ -118,11 +120,11 @@ export default class niveau2 extends Phaser.Scene {
     }
   }
 }
-  
 
 function chocAvecBombe(un_player, une_bombe) {
   this.physics.pause();
   this.player.setTint(0xff0000);
   this.player.anims.play("anim_face");
   gameOver = true;
-} 
+  fct.killPlayer(this);
+}

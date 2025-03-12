@@ -12,7 +12,7 @@ export default class règles extends Phaser.Scene {
   }
 
   create() {
-    this.add.image(400, 300, "img_ciel");
+    this.add.image(400, 290, "img_ciel");
     this.groupe_plateformes = this.physics.add.staticGroup();
     this.groupe_plateformes.create(200, 584, "img_plateforme");
     this.groupe_plateformes.create(600, 584, "img_plateforme");
