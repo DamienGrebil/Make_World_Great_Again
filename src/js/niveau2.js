@@ -66,13 +66,13 @@ export default class niveau2 extends Phaser.Scene {
 
     groupe_bombes = this.physics.add.group(); 
     this.physics.add.collider(groupe_bombes, calque_plateformes);
-    for (let i = 0; i < 5; i++) { // Modifier le 5 pour changer le nombre de bombes
+    for (let i = 0; i < 20; i++) { // Modifier le 5 pour changer le nombre de bombes
       let x = Phaser.Math.Between(50, 3000); // Position X aléatoire
-      let y = Phaser.Math.Between(10, 50); // Position Y aléatoire (hauteur aléatoire)
+      let y = Phaser.Math.Between(100, 130); // Position Y aléatoire (hauteur aléatoire)
       
       let une_bombe = groupe_bombes.create(x, y, "img_bombe");
   
-      une_bombe.setBounce(Phaser.Math.FloatBetween(0.6, 1)); // Rebond aléatoire entre 0.6 et 1
+      une_bombe.setBounce(Phaser.Math.FloatBetween(1, 1)); // Rebond aléatoire entre 0.6 et 1
       une_bombe.setCollideWorldBounds(true);
       
       let vitesseX = Phaser.Math.Between(-200, 200); // Vitesse X aléatoire
