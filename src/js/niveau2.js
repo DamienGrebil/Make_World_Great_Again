@@ -17,6 +17,7 @@ export default class niveau2 extends Phaser.Scene {
     this.load.image("img_porte2", "src/assets/porte2.png");
     this.load.image("img_perso", "src/assets/perso.png");
     this.load.image("img_bombe", "src/assets/bombe.png")
+    this.load.image("img_cabine", "src/assets/cabine.png")
   }
 
 
@@ -53,7 +54,7 @@ export default class niveau2 extends Phaser.Scene {
     //  ajout du champs de la caméra de taille identique à celle du monde
     this.cameras.main.setBounds(0, 0, 3200, 640);
     // ancrage de la caméra sur le joueur
-    this.porte_retour = this.physics.add.staticSprite(100, 525, "img_porte2");
+    this.porte_retour = this.physics.add.staticSprite(100, 525, "img_cabine");
     this.porte3 = this.physics.add.staticSprite(3150, 525, "img_porte3");
     this.player = this.physics.add.sprite(100, 450, "img_perso");
     this.player.refreshBody();
