@@ -23,7 +23,7 @@ export default class niveau2 extends Phaser.Scene {
     this.load.image("img_perso", "src/assets/perso.png");
     this.load.image("img_cabine", "src/assets/cabine.png");
     this.load.image("img_plateforme_b", "src/assets/platform_b.png");
-    this.load.image("croissant", "src/assets/bombe.png");
+    this.load.image("bombe", "src/assets/bombe.png");
   }
 
   create() {
@@ -81,7 +81,7 @@ export default class niveau2 extends Phaser.Scene {
       let x = Phaser.Math.Between(50, 3000);
       let y = Phaser.Math.Between(100, 130);
 
-      let une_bombe = groupe_bombes.create(x, y, "croissant");
+      let une_bombe = groupe_bombes.create(x, y, "bombe"); //Change the texture here
 
       une_bombe.setBounce(Phaser.Math.FloatBetween(1, 1));
       une_bombe.setCollideWorldBounds(true);
