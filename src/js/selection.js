@@ -58,16 +58,14 @@ export default class selection extends Phaser.Scene {
     this.load.image("img_cabine", "src/assets/cabine.png");
     this.load.image("img_porte3", "src/assets/door3.png");
     this.load.image("img_bombe", "src/assets/bombe.png");
-    cursors = this.input.keyboard.createCursorKeys();
-    boutonFeu = this.input.keyboard.addKey('A');
     this.load.image("bullet", "src/assets/balle.png");
     this.load.image("cible_d", "src/assets/bouton_d.png");
     this.load.image("cible_g", "src/assets/bouton_g.png");
     this.load.image("img_victoire", "src/assets/VICTOIRE.png");
 
     // on charge deux fichiers audio avec les identifiants coupDeFeu et background
-
-
+      cursors = this.input.keyboard.createCursorKeys();
+      boutonFeu = this.input.keyboard.addKey('A');
 
   }
 
@@ -229,7 +227,8 @@ export default class selection extends Phaser.Scene {
 
     // déclenchement de la fonction tirer() si appui sur boutonFeu 
     if (Phaser.Input.Keyboard.JustDown(boutonFeu)) {
-      tirer(player);
+     // tirer(player);  //tirer was undefined so I comment it for now, until we have this function available.
+     console.log("tirer was called, but tirer() function is undefined")
     }
 
     if (gameOver) {
