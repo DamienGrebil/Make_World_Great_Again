@@ -3,7 +3,7 @@ import * as fct from "/src/js/fonctions.js";
 var groupe_bombes; // Groupe contenant les bombes présentes dans le niveau
 var gameOver = false; // Variable indiquant si la partie est terminée ou non
 var groupe_plateformes; // Groupe contenant les plateformes du niveau
-var invincible = false; // Variable indiquant si le joueur est invincible (pour le moment toujours false dans le code)
+var invincible = true; // Variable indiquant si le joueur est invincible (pour le moment toujours false dans le code)
 var playerHealth = 1; // Points de vie du joueur, initialisé à 1 (attention il est modifier ensuite, dans le create())
 var playerHealthText; // Variable pour le texte affichant les points de vie du joueur (non utilisé dans le code actuel)
 var hasInteractedWithCabine = false; // Variable pour savoir si le joueur a interagi avec la cabine (false par default)

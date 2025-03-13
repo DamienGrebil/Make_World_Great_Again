@@ -62,8 +62,8 @@ export default class niveau3 extends Phaser.Scene {
     this.groupe_plateformes_bunker.create(150, 334, "img_plateforme_bunker_mini");
     this.groupe_plateformes_bunker.create(170, 334, "img_plateforme_bunker_mini");
     this.groupe_plateformes_bunker.create(800, 310, "img_plateforme_bunker_mini");
-    this.player = this.physics.add.sprite(100, 409, "img_perso"); // Ajout du joueur
     this.porte_retour = this.physics.add.staticSprite(100, 409, "img_porte3");// Ajout de la porte de retour
+    this.player = this.physics.add.sprite(100, 409, "img_perso"); // Ajout du joueur
     this.player.setBounce(0.2); // Ajout d'un rebond au joueur
     this.player.setCollideWorldBounds(true); // Le joueur ne peut pas sortir des limites du monde
     this.player.direction = "right"; // Initialisation de la direction du joueur vers la droite

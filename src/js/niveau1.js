@@ -163,6 +163,7 @@ export default class niveau1 extends Phaser.Scene {
     this.physics.add.overlap(this.player, groupeAgentBullets, (player, bullet) => {
       bullet.destroy(); // Destruction de la balle
       fct.killPlayer(this); // Appel de la fonction killPlayer (dans le fichier fonctions.js)
+      son_niveau1.stop();
       gameOver = true; // Game over
     }, null, this);
 
@@ -206,11 +207,9 @@ export default class niveau1 extends Phaser.Scene {
 
     if (Phaser.Input.Keyboard.JustDown(this.clavier.space) == true) {
       if (this.physics.overlap(this.player, this.porte_retour)) {
-        son_niveau1.stop();
         this.scene.switch("selection");
       }
       if (this.physics.overlap(this.player, this.porte2)) {
-        
           son_niveau1.stop();
           this.scene.switch("niveau2");
         
@@ -288,45 +287,6 @@ export default class niveau1 extends Phaser.Scene {
   }
 }
 
-// Fonction pour démarrer le compte à rebours
-export function startCountdown(scene) {
-  scene.timeLeft = 10 * 60; // 10 minutes en secondes (10 minutes * 60 secondes/minute)
-  scene.timerText = scene.add.text(195, 0, "Temps restant: 10:00", { // Ajoute un texte pour le timer
-    fontSize: "20px", // Taille de la police
-    fill: "#ffffff", // Couleur du texte (blanc)
-    fontFamily: "Arial", // Police d'écriture
-    backgroundColor: "#000000", //couleur du background
-    padding: { x: 10, y: 5 } // Marge intérieure du texte
-  }).setOrigin(1, 0); // Place le point d'origine du texte en haut à droite
-
-  // Met le texte en haut à droite de l'écran en suivant la caméra
-  scene.timerText.setScrollFactor(0); // Fixe le texte sur l'écran (ne suit pas la caméra)
-
-  console.log("Texte du timer ajouté !"); // Affichage dans la console
-
-  scene.time.addEvent({ // Ajout d'un événement qui se répète toutes les secondes
-    delay: 1000, // 1000 ms = 1 seconde
-    callback: () => { // Fonction appelée à chaque seconde
-      scene.timeLeft--; // Décrémente le temps restant
-      let minutes = Math.floor(scene.timeLeft / 60); // Calcule les minutes (partie entière de la division par 60)
-      let seconds = scene.timeLeft % 60; // Calcule les secondes (reste de la division par 60)
-      scene.timerText.setText(`Temps restant: ${minutes}:${seconds.toString().padStart(2, '0')}`); // Met à jour le texte du timer
-      console.log(scene.timeLeft); // Affiche le temps restant dans la console
-
-      if (scene.timeLeft <= 0) { // Si le temps est écoulé (inférieur ou égal à 0)
-        killPlayer(scene); // Appel de la fonction "killPlayer" (pour la mort du joueur)
-      }
-    },
-    loop: true // L'événement se répète en boucle
-  });
-}
-
-// Fonction pour mettre à jour la position du timer en fonction du mouvement de la caméra
-export function updateTimerPosition(scene) {
-  // Met à jour la position du timer pour qu'il soit toujours en haut à droite de l'écran
-  scene.timerText.x = scene.cameras.main.scrollX + scene.cameras.main.width - 160; // Décalage à droite
-  scene.timerText.y = scene.cameras.main.scrollY + 20; // Décalage en haut
-}
 
 // Fonction appelée lorsqu'un joueur doit mourir
 export function killPlayer(scene) {
