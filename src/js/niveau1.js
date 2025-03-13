@@ -24,7 +24,7 @@ export default class niveau1 extends Phaser.Scene {
     });
   }
   preload() {
-    this.load.audio("mission", "src/assets/mission.mp3");
+    this.load.audio("mission", "src/assets/mission.mp3"); //charge 'audio
     this.load.image("img_bombe", "src/assets/bombe.png"); // Chargement de l'image de la bombe
     cursors = this.input.keyboard.createCursorKeys(); // Création de l'objet pour les touches directionnelles
     boutonFeu = this.input.keyboard.addKey('A'); // Création de l'objet pour la touche 'A' (tir)
