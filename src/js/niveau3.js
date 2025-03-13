@@ -133,6 +133,7 @@ export default class niveau3 extends Phaser.Scene {
     playerHealthText.setText("Player Health: " + playerHealth);//update the text of the player health
     if (playerHealth <= 0) { //if the player have 0 hp or less
       this.killPlayer();//Call the function killPlayer in this file
+      son_niveau3.stop();
     }
     une_bombe.destroy();//destoy the bomb
   }
