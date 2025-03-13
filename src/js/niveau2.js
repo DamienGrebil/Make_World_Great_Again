@@ -3,7 +3,7 @@ import * as fct from "/src/js/fonctions.js";
 var groupe_bombes;
 var gameOver = false;
 var groupe_plateformes;
-var invincible = true; // New variable for invincibility
+var invincible = false; // New variable for invincibility
 var playerHealth = 1; // Initialize player's health
 var playerHealthText; // New variable for the player's health text
 var hasInteractedWithCabine = false; // New variable to track interaction with the cabine
