@@ -33,7 +33,7 @@ export default class niveau1 extends Phaser.Scene {
     this.load.image("cible", "src/assets/bouton.png", { frameWidth: 100, frameHeight: 32 }); // Chargement de l'image du bouton non appuyé
     this.load.image("cible_d", "src/assets/cible_d.png"); // Chargement de l'image du bouton droite (non appuyé)
     this.load.image("cible_g", "src/assets/cible_g.png"); // Chargement de l'image du bouton gauche (non appuyé)
-    this.load.image("bouton_appuye", "src/assets/bouton_appuyé.png"); // Chargement de l'image du bouton appuyé
+    this.load.image("bouton_appuyé", "src/assets/bouton_appuyé.png"); // Chargement de l'image du bouton appuyé
   }
 
   create() {
@@ -98,7 +98,6 @@ export default class niveau1 extends Phaser.Scene {
     this.player.setCollideWorldBounds(true); // Empêche le joueur de sortir des limites du monde
     this.clavier = this.input.keyboard.createCursorKeys(); // Création de l'objet pour les touches directionnelles
     this.physics.add.collider(this.player, this.groupe_plateformes); // Gestion de la collision entre le joueur et les plateformes
-    fct.startCountdown(this); // Lancement du compte à rebours
 
     groupeBullets = this.physics.add.group(); // Création du groupe pour les balles du joueur
     // Gestion de la destruction des balles lorsqu'elles sortent du monde
@@ -119,7 +118,6 @@ export default class niveau1 extends Phaser.Scene {
 
     // Détection de la collision entre les balles du joueur et les cibles
     this.physics.add.overlap(groupeBullets, groupeCibles, this.hit, null, this); // Ajout d'un overlap et appel de la fonction this.hit si il y a overlap
-
     this.player.direction = "right"; // Initialisation de la direction du joueur
 
     // Creation du groupe des agents
@@ -147,7 +145,7 @@ export default class niveau1 extends Phaser.Scene {
     this.agentShootingTimers = []; // Création d'un tableau pour stocker les timers des agents.
     agents.children.iterate((agent) => {
       let timer = this.time.addEvent({ // Ajout d'un timer
-        delay: Phaser.Math.Between(2000, 4000), // Délai aléatoire entre 2 et 4 secondes
+        delay: Phaser.Math.Between(1000, 3000), // Délai aléatoire entre 1 et 3 secondes
         callback: () => {
           if (!agent.isDead) { // Si l'agent n'est pas mort
             this.agentTir(agent, this.player, groupeAgentBullets); // Appel de la fonction pour faire tirer l'agent

@@ -46,49 +46,13 @@ function hit(bullet, groupeCibles) {
  * Crée et démarre un compte à rebours (timer) dans la scène.
  * @param {Phaser.Scene} scene - La scène Phaser dans laquelle ajouter le timer.
  */
-export function startCountdown(scene) {
-    scene.timeLeft = 10 * 60; // Initialise le temps restant à 10 minutes (10 * 60 secondes)
-    scene.timerText = scene.add.text(195, 0, "Temps restant: 10:00", { // Création du texte du timer
-        fontSize: "20px", // Taille de la police
-        fill: "#ffffff", // Couleur du texte (blanc)
-        fontFamily: "Arial", // Police d'écriture
-        backgroundColor: "#000000", // Couleur de fond
-        padding: { x: 10, y: 5 } // Marge intérieure du texte
-    }).setOrigin(1, 0); // Positionne le point d'origine du texte en haut à droite
 
-    // Met le texte en haut à droite de l'écran en suivant la caméra
-    scene.timerText.setScrollFactor(0); // Fixe le texte sur l'écran (ne suit pas la caméra)
-
-    console.log("Texte du timer ajouté !"); // Affiche un message dans la console
-
-    scene.time.addEvent({ // Ajoute un événement qui se répète toutes les secondes
-        delay: 1000, // 1000 ms = 1 seconde
-        callback: () => {
-            scene.timeLeft--; // Décrémente le temps restant
-            let minutes = Math.floor(scene.timeLeft / 60); // Calcule le nombre de minutes (partie entière de la division par 60)
-            let seconds = scene.timeLeft % 60; // Calcule le nombre de secondes (reste de la division par 60)
-            scene.timerText.setText(`Temps restant: ${minutes}:${seconds.toString().padStart(2, '0')}`); // Met à jour le texte du timer en affichant les minutes et les secondes. `padStart(2, '0')` ajoute un 0 devant les secondes si elles sont < 10.
-            console.log(scene.timeLeft); // Affiche le temps restant dans la console
-
-            if (scene.timeLeft <= 0) { // Si le temps est écoulé
-                killPlayer(scene); // Appel de la fonction killPlayer pour gérer la mort du joueur
-            }
-        },
-        loop: true // L'événement se répète en boucle
-    });
-}
 
 /**
  * Fonction updateTimerPosition.
  * Met à jour la position du timer en fonction du mouvement de la caméra.
  * @param {Phaser.Scene} scene - La scène Phaser dans laquelle se trouve le timer.
  */
-export function updateTimerPosition(scene) {
-    // Met à jour la position du timer pour qu'il soit toujours en haut à droite de l'écran
-    scene.timerText.x = scene.cameras.main.scrollX + scene.cameras.main.width - 160; // Calcul de la position horizontale (bord droit de la caméra - décalage)
-    scene.timerText.y = scene.cameras.main.scrollY + 20; // Calcul de la position verticale (bord haut de la caméra + décalage)
-}
-
 /**
  * Fonction killPlayer.
  * Gère la mort du joueur et son respawn.
